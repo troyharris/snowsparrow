@@ -23,21 +23,40 @@
 
 ## In Progress
 
+- Code organization and architecture
+
+  - [x] AI service layer implementation
+    - [x] Model configuration
+    - [x] Prompt templates
+    - [x] OpenRouter client
+  - [x] Shared UI components
+    - [x] Button component
+    - [x] Card components
+    - [x] Select component
+    - [x] Textarea component
+    - [x] LoadingSpinner component
+    - [x] ErrorMessage component
+    - [x] SuccessMessage component
+  - [x] Component documentation
+  - [ ] Unit tests
+  - [ ] Error boundaries
+
 - Mermaid flowchart creation tool
   - [x] User input interface
   - [x] OpenRouter API integration
   - [x] Flowchart rendering
   - [x] PNG download functionality
+  - [x] Input validation
+  - [x] Error handling
+  - [x] Loading states
   - [ ] Supabase storage integration
     - [x] Create 'flowcharts' storage bucket
-    - [ ] Set up storage access policies (SQL provided, needs to be executed in Supabase Dashboard)
+    - [ ] Set up storage access policies
     - [x] Create storage API route
-    - [ ] Add save button to UI
-    - [ ] Implement save functionality
-    - [ ] Add loading states
-    - [ ] Handle success/error states
-  - [ ] Error handling
-  - [ ] User feedback implementation
+    - [x] Add save button to UI
+    - [x] Implement save functionality
+    - [x] Add loading states
+    - [x] Handle success/error states
 
 ## Planned Features
 
@@ -46,22 +65,30 @@
   - Saved flowcharts
   - User preferences
 - Additional AI tools (future)
+  - Reuse AI service layer
+  - Follow established patterns
+  - Share UI components
 - Analytics and usage tracking
 - User feedback system
 - Advanced styling and UI polish
 
 ## Known Issues
 
-- None documented yet
+- Storage access policies need to be set up in Supabase Dashboard
+- Unit tests needed for components and services
+- Error boundaries not yet implemented
 
 ## Testing Status
 
-- Basic infrastructure tests needed
-- Authentication flow testing required
-- OpenRouter API integration tests pending
-- Component unit tests needed
+- Component unit tests needed:
+  - Shared UI components
+  - AI service layer
+  - API routes
+- Integration tests needed:
+  - OpenRouter API integration
+  - Supabase storage integration
+  - Authentication flow
 - End-to-end testing plan required
-- Storage integration tests needed
 
 ## Deployment Status
 
@@ -75,43 +102,37 @@
 ## Documentation Status
 
 - Memory Bank initialized and maintained
+- Shared components documented
+- AI service layer documented
 - API documentation needed
 - User guide pending
-- Component documentation required
 - Testing documentation needed
 - Storage integration documentation needed
 
 ## Next Milestone
 
-Complete Mermaid flowchart creation tool with:
+1. Testing Implementation
 
-1. Core Functionality
+   - Set up testing framework
+   - Write component tests
+   - Write service tests
+   - Write API route tests
+   - Implement error boundaries
 
-   - Working user interface ✓
-   - Successful OpenRouter API integration ✓
-   - Proper error handling
-   - Download functionality ✓
-   - Storage functionality
-     - Save to Supabase
-     - Success/error feedback
-     - Loading states
+2. Documentation
 
-2. Testing & Validation
+   - Complete API documentation
+   - Write user guide
+   - Add testing documentation
+   - Document best practices
 
-   - Unit tests
-   - Integration tests
-   - Storage integration tests
-   - User acceptance testing
+3. Storage Integration
 
-3. Documentation
-
-   - API documentation
-   - User guide
-   - Testing documentation
-   - Storage integration docs
+   - Set up storage access policies
+   - Test storage functionality
+   - Document storage integration
 
 4. Deployment
    - Environment setup
-   - Storage bucket configuration ✓
    - Production deployment
    - Monitoring configuration

@@ -1,38 +1,73 @@
 import { NextResponse } from "next/server";
+import { openRouterClient } from "@/lib/ai/clients/openrouter";
+import { getModelForTask } from "@/lib/ai/config/models";
+import { getPromptForTask } from "@/lib/ai/prompts/mermaid";
 
 export async function POST(request: Request) {
-  const { inputText } = await request.json();
+  try {
+    const { inputText, promptType = "default" } = await request.json();
 
-  // Call OpenRouter API to get Mermaid code
-  const response = await fetch(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.0-flash-001",
-        messages: [
-          {
-            role: "user",
-            content: `Generate a Mermaid flowchart code based on the following description: ${inputText}. Include only the mermaid code in plaintext, no markdown. Differentiate the colors of the boxes by box type. Make sure the color contrast between the text and the background is readable.`,
-          },
-        ],
-      }),
+    if (!inputText?.trim()) {
+      return NextResponse.json(
+        { error: "Input text is required" },
+        { status: 400 }
+      );
     }
-  );
 
-  const data = await response.json();
-  let mermaidCode = data.choices[0].message.content;
+    if (!["default", "technical"].includes(promptType)) {
+      return NextResponse.json(
+        { error: "Invalid prompt type" },
+        { status: 400 }
+      );
+    }
 
-  // Extract mermaid code from markdown code blocks if present
-  if (mermaidCode.includes("```mermaid")) {
-    mermaidCode = mermaidCode.split("```mermaid")[1].split("```")[0].trim();
-  } else if (mermaidCode.includes("```")) {
-    mermaidCode = mermaidCode.split("```")[1].trim();
+    // Get the appropriate model and prompt for the task
+    const model = getModelForTask("mermaid");
+    const prompt = getPromptForTask(
+      promptType as "default" | "technical",
+      inputText
+    );
+
+    try {
+      // Generate the Mermaid code
+      const mermaidCode = await openRouterClient.generateMermaidCode(
+        model,
+        prompt.messages
+      );
+
+      // Basic validation of generated Mermaid code
+      if (!mermaidCode?.trim()) {
+        throw new Error("Generated Mermaid code is empty");
+      }
+
+      if (
+        !mermaidCode.toLowerCase().includes("flowchart") &&
+        !mermaidCode.toLowerCase().includes("graph")
+      ) {
+        throw new Error("Generated code is not a valid Mermaid flowchart");
+      }
+
+      return NextResponse.json({ mermaidCode });
+    } catch (genError) {
+      console.error("Error generating Mermaid code:", genError);
+      return NextResponse.json(
+        {
+          error:
+            "Failed to generate valid flowchart. Please try rephrasing your description.",
+        },
+        { status: 422 }
+      );
+    }
+  } catch (error) {
+    console.error("API error:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ mermaidCode });
 }

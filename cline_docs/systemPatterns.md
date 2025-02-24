@@ -7,10 +7,21 @@ flowchart TD
     Client[Client Browser] --> Next[Next.js App Router]
     Next --> Auth[Supabase Auth]
     Next --> API[API Routes]
-    API --> OpenRouter[OpenRouter AI]
+    API --> AIService[AI Service Layer]
+    AIService --> Models[Model Config]
+    AIService --> Prompts[Prompt Templates]
+    AIService --> OpenRouter[OpenRouter Client]
     API --> Supabase[Supabase Backend]
     Supabase --> DB[(Database)]
     Supabase --> Storage[(File Storage)]
+
+    subgraph UI[UI Layer]
+        SharedComponents[Shared Components]
+        ToolComponents[Tool Components]
+        ToolComponents --> SharedComponents
+    end
+
+    Client --> UI
 ```
 
 ## Core Technical Patterns
@@ -26,15 +37,32 @@ flowchart TD
 
 1. User input captured in React components
 2. Server actions process requests
-3. OpenRouter API generates AI content
-4. Results rendered and optionally stored
+3. AI service layer handles model selection and prompts
+4. OpenRouter client generates AI content
+5. Results rendered and optionally stored
 
 ### Component Architecture
 
-- Page components in app/ directory
-- Reusable UI components in components/
+- Shared UI components in components/shared/
+  - Button with variants
+  - Card with header and content
+  - Form inputs (Select, Textarea)
+  - Feedback components (Error, Success, Loading)
+- Tool-specific components in app/ directory
 - Utility functions in utils/
 - Type definitions in types/
+
+### AI Service Layer
+
+- Model configuration in lib/ai/config/
+  - Model definitions and metadata
+  - Task-specific model selection
+- Prompt templates in lib/ai/prompts/
+  - Task-specific prompts
+  - Prompt variants
+- API clients in lib/ai/clients/
+  - OpenRouter client
+  - Future AI service clients
 
 ### State Management
 

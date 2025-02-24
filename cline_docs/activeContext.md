@@ -2,86 +2,80 @@
 
 ## Current Focus
 
-- Implementing Mermaid flowchart creation tool
-- Building out core application pages
-- Refining authentication system
-- Implemented middleware to protect all routes
-- Adding Supabase storage for saving Mermaid flowcharts
+- Refactoring and improving code organization
+- Creating reusable UI components
+- Implementing AI service layer
+- Enhancing error handling and validation
+- Standardizing component patterns
 
 ## Recent Changes
 
-- Project initialization with Next.js
-- Supabase integration setup
-- Basic authentication flow implementation
-- Created core application pages:
-  - Landing page
-  - Login page
-  - Account page
-  - Error page
-  - Mermaid tool page
-- Basic styling with Tailwind CSS
-- Added PNG download functionality for Mermaid flowcharts
-- Implemented storage API route for Mermaid flowcharts:
-  - User authentication validation
-  - File size limit (5MB)
-  - Metadata storage (prompt and mermaid code)
-  - Unique file naming with user ID and timestamp
+- Created AI service layer:
+  - Model configuration in lib/ai/config/models.ts
+  - Prompt templates in lib/ai/prompts/mermaid.ts
+  - OpenRouter client in lib/ai/clients/openrouter.ts
+- Created shared UI components:
+  - Button with variants
+  - Card with header and content sections
+  - Select dropdown
+  - Textarea with error states
+  - LoadingSpinner
+  - ErrorMessage
+  - SuccessMessage
+- Added input validation for Mermaid API
+- Enhanced error handling and user feedback
+- Documented shared components
 
 ## Active Decisions
 
-- Using App Router for modern Next.js features
-- Implementing Supabase auth for user management
-- Planning modular architecture for future AI tools
-- Component-based structure for maintainability
-- Using Supabase storage for saving user-generated flowcharts
+- Using shared components for consistent UI
+- Implementing AI service layer for future tools
+- Standardizing error handling patterns
+- Using TypeScript for type safety
+- Following component-based architecture
 
 ## Current Considerations
 
 ### Technical
 
-- API route structure for OpenRouter integration
-- Storage strategy for generated flowcharts:
-  - ✓ Create a 'flowcharts' bucket in Supabase storage
-  - ✓ Implement storage API route with metadata
-  - Next steps:
-    - Add save button to UI
-    - Implement client-side storage integration
-    - Add loading and error states
-    - Test storage functionality
-- Authentication flow optimization
-- Performance monitoring setup
-- Component organization and reusability
+- Expanding AI service layer for future tools
+- Component reusability and composition
+- Error handling patterns
+- State management strategies
+- Performance optimization
 
 ### Product
 
-- User interface design for flowchart tool
-- Error handling and user feedback
-- Download and storage functionality for generated charts
-- User onboarding experience
-- Consistent styling across pages
+- User experience consistency
+- Error message clarity
+- Loading state feedback
+- Component documentation
+- Design system evolution
 
 ## Next Steps
 
-1. Complete Mermaid flowchart creation tool implementation
-   - Finish OpenRouter API integration
-   - Implement flowchart rendering
-   - Add PNG download functionality ✓
-   - Add Supabase storage integration:
-     - Set up storage bucket
-     - Create storage API route
-     - Add save button UI
-     - Implement save functionality
-     - Add success/error feedback
-2. Enhance user authentication flow
-3. Create comprehensive user dashboard
-4. Implement robust error handling
-5. Add usage analytics
-6. Polish application styling
-7. Add comprehensive testing
+1. Review and test shared components
+2. Document component usage patterns
+3. Implement remaining UI improvements:
+   - Loading states
+   - Error boundaries
+   - Success feedback
+4. Add unit tests for:
+   - Shared components
+   - AI service layer
+   - API routes
+5. Consider additional shared components:
+   - Form components
+   - Layout components
+   - Navigation components
+6. Enhance documentation:
+   - Component API references
+   - Usage examples
+   - Best practices
 
 ## Open Questions
 
-- Best practices for rate limiting OpenRouter API calls
-- Storage strategy for user-generated content
-- Metrics for measuring tool effectiveness
-- Testing strategy for AI-generated content
+- Additional shared components needed
+- Testing strategy for components
+- State management needs
+- Performance optimization opportunities

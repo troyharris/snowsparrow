@@ -2,6 +2,16 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import {
+  LoadingSpinner,
+  ErrorMessage,
+  Button,
+  Select,
+  Textarea,
+  Card,
+  CardHeader,
+  CardContent,
+} from "@/components/shared";
 
 const Mermaid = dynamic(() => import("@/app/mermaid/MermaidComponent"), {
   ssr: false,
@@ -10,19 +20,38 @@ const Mermaid = dynamic(() => import("@/app/mermaid/MermaidComponent"), {
 export default function MermaidPage() {
   const [inputText, setInputText] = useState("");
   const [mermaidCode, setMermaidCode] = useState("");
+  const [promptType, setPromptType] = useState<"default" | "technical">(
+    "default"
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const generateDiagram = async () => {
-    // Call the API route to get the Mermaid code from OpenRouter
-    const response = await fetch("/api/mermaid", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ inputText }),
-    });
+    try {
+      setError(null);
+      setIsLoading(true);
 
-    const data = await response.json();
-    setMermaidCode(data.mermaidCode);
+      const response = await fetch("/api/mermaid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inputText, promptType }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate diagram");
+      }
+
+      setMermaidCode(data.mermaidCode);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+      console.error("Error generating diagram:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -40,44 +69,96 @@ export default function MermaidPage() {
 
         <div className="space-y-8">
           <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
-              <label
-                htmlFor="workflow"
-                className="block text-sm font-medium text-foreground mb-2"
-              >
-                Workflow Description
-              </label>
-              <textarea
-                id="workflow"
-                className="w-full h-48 resize-y bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
-                placeholder="Example: First, the user logs in. If login is successful, they see their dashboard. If login fails, they return to the login page with an error message."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-              />
-              <button
-                className="mt-4 w-full bg-accent hover:bg-accent-hover text-accent-foreground font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-ring"
-                onClick={generateDiagram}
-                disabled={!inputText.trim()}
-              >
-                Generate Flowchart
-              </button>
-            </div>
+            <Card>
+              <CardHeader title="Workflow Description" />
+              <CardContent>
+                <Select
+                  id="promptType"
+                  label="Diagram Type"
+                  value={promptType}
+                  onChange={(e) =>
+                    setPromptType(e.target.value as "default" | "technical")
+                  }
+                  fullWidth
+                  options={[
+                    { value: "default", label: "Standard Flowchart" },
+                    { value: "technical", label: "Technical System Diagram" },
+                  ]}
+                />
 
-            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
-              <h3 className="text-xl leading-8 font-semibold text-foreground mb-2">
-                Tips
-              </h3>
-              <ul className="text-sm text-muted space-y-2 leading-relaxed">
-                <li>• Be specific about the steps in your process</li>
-                <li>• Include decision points and their outcomes</li>
-                <li>• Mention any loops or repetitive steps</li>
-                <li>• Keep descriptions clear and concise</li>
-              </ul>
-            </div>
+                <Textarea
+                  id="workflow"
+                  label="Description"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder={
+                    promptType === "default"
+                      ? "Example: First, the user logs in. If login is successful, they see their dashboard. If login fails, they return to the login page with an error message."
+                      : "Example: The web client sends requests to the API gateway, which routes them to microservices. Each microservice connects to its own database and communicates through a message queue."
+                  }
+                  fullWidth
+                  className="h-48"
+                />
+
+                {error && <ErrorMessage message={error} />}
+
+                <Button
+                  onClick={generateDiagram}
+                  disabled={!inputText.trim() || isLoading}
+                  fullWidth
+                >
+                  {isLoading ? (
+                    <LoadingSpinner text="Generating..." />
+                  ) : (
+                    "Generate Flowchart"
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader title="Tips" />
+              <CardContent className="space-y-6">
+                <div>
+                  <h4 className="font-medium text-foreground mb-2">
+                    Standard Flowchart
+                  </h4>
+                  <ul className="text-sm text-muted space-y-2 leading-relaxed">
+                    <li>• Be specific about the steps in your process</li>
+                    <li>• Include decision points and their outcomes</li>
+                    <li>• Mention any loops or repetitive steps</li>
+                    <li>• Keep descriptions clear and concise</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-foreground mb-2">
+                    Technical System Diagram
+                  </h4>
+                  <ul className="text-sm text-muted space-y-2 leading-relaxed">
+                    <li>
+                      • Describe system components and their relationships
+                    </li>
+                    <li>• Specify data flow directions</li>
+                    <li>• Include important technical details</li>
+                    <li>• Mention any system constraints or requirements</li>
+                  </ul>
+                </div>
+
+                <div className="text-sm text-muted pt-4 border-t border-border">
+                  <p>
+                    Choose the diagram type that best fits your needs. Standard
+                    flowcharts are great for processes and workflows, while
+                    technical diagrams are better for system architecture and
+                    data flow.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="bg-background border border-border rounded-md p-6 shadow-sm w-full">
-            <div className="items-center justify-center bg-white text-black">
+          <Card className="w-full">
+            <CardContent className="items-center justify-center bg-white text-black">
               {mermaidCode ? (
                 <Mermaid mermaidCode={mermaidCode} prompt={inputText} />
               ) : (
@@ -88,8 +169,8 @@ export default function MermaidPage() {
                   </p>
                 </div>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

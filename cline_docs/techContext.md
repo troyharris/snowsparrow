@@ -9,15 +9,23 @@
 - Tailwind CSS for styling
 - React Server Components
 - Client-side interactivity where needed
+- Shared component library:
+  - Button, Card components
+  - Form components (Select, Textarea)
+  - Feedback components (Error, Success, Loading)
+  - Component documentation
 
 ### Backend
 
 - Next.js API routes
+- AI service layer:
+  - Model configuration
+  - Prompt templates
+  - OpenRouter client
 - Supabase for:
   - PostgreSQL database
   - Authentication
   - File storage
-- OpenRouter API integration
 
 ### Infrastructure
 
@@ -42,14 +50,18 @@
 - typescript
 - eslint
 - postcss
+- mermaid (for flowchart rendering)
 
 ### Development Workflow
 
 1. Local development server
 2. TypeScript compilation
 3. ESLint checking
-4. Vercel preview deployments
-5. Production deployment
+4. Component development
+5. API integration
+6. Testing (planned)
+7. Vercel preview deployments
+8. Production deployment
 
 ## Technical Constraints
 
@@ -58,18 +70,23 @@
 - Server-side rendering where possible
 - Optimized client-side interactions
 - Efficient API calls
+- Component reusability
+- Modular architecture
 
 ### Security
 
 - Authentication required for sensitive operations
 - Environment variables protection
 - API rate limiting
+- Input validation
+- Error handling
 
 ### Browser Support
 
 - Modern browsers
 - Progressive enhancement
 - Mobile-first responsive design
+- Accessibility compliance
 
 ## Integration Points
 
@@ -78,14 +95,19 @@
 - Authentication system
 - Database operations
 - File storage system
+- Storage access policies
 
-### OpenRouter
+### AI Services
 
-- AI processing
-- Mermaid chart generation
+- OpenRouter integration
+- Model configuration
+- Prompt templates
+- Error handling
+- Rate limiting
 
 ### Vercel
 
 - Deployment platform
 - Environment configuration
 - Edge functions if needed
+- Performance monitoring
