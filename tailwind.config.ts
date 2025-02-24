@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        accent: "#05595f",
+      },
+      fontFamily: {
+        sans: ["Manrope", "sans-serif"],
       },
     },
   },
