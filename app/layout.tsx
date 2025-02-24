@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${manrope.variable} font-sans antialiased min-h-screen`}
+        className={`${manrope.variable} font-sans antialiased min-h-screen text-foreground bg-background`}
       >
         <nav className="bg-white shadow-sm border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

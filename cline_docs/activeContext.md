@@ -6,6 +6,7 @@
 - Building out core application pages
 - Refining authentication system
 - Implemented middleware to protect all routes
+- Adding Supabase storage for saving Mermaid flowcharts
 
 ## Recent Changes
 
@@ -19,6 +20,12 @@
   - Error page
   - Mermaid tool page
 - Basic styling with Tailwind CSS
+- Added PNG download functionality for Mermaid flowcharts
+- Implemented storage API route for Mermaid flowcharts:
+  - User authentication validation
+  - File size limit (5MB)
+  - Metadata storage (prompt and mermaid code)
+  - Unique file naming with user ID and timestamp
 
 ## Active Decisions
 
@@ -26,13 +33,21 @@
 - Implementing Supabase auth for user management
 - Planning modular architecture for future AI tools
 - Component-based structure for maintainability
+- Using Supabase storage for saving user-generated flowcharts
 
 ## Current Considerations
 
 ### Technical
 
 - API route structure for OpenRouter integration
-- Storage strategy for generated flowcharts
+- Storage strategy for generated flowcharts:
+  - ✓ Create a 'flowcharts' bucket in Supabase storage
+  - ✓ Implement storage API route with metadata
+  - Next steps:
+    - Add save button to UI
+    - Implement client-side storage integration
+    - Add loading and error states
+    - Test storage functionality
 - Authentication flow optimization
 - Performance monitoring setup
 - Component organization and reusability
@@ -41,7 +56,7 @@
 
 - User interface design for flowchart tool
 - Error handling and user feedback
-- Download functionality for generated charts
+- Download and storage functionality for generated charts
 - User onboarding experience
 - Consistent styling across pages
 
@@ -50,7 +65,13 @@
 1. Complete Mermaid flowchart creation tool implementation
    - Finish OpenRouter API integration
    - Implement flowchart rendering
-   - Add PNG download functionality
+   - Add PNG download functionality ✓
+   - Add Supabase storage integration:
+     - Set up storage bucket
+     - Create storage API route
+     - Add save button UI
+     - Implement save functionality
+     - Add success/error feedback
 2. Enhance user authentication flow
 3. Create comprehensive user dashboard
 4. Implement robust error handling

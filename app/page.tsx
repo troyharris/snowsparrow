@@ -6,11 +6,11 @@ export default function Home() {
       {/* Hero section */}
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center sm:text-left max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight">
+          <h1 className="text-3xl leading-10 font-bold tracking-tight text-foreground sm:text-5xl">
             AI Tools for Education,{" "}
             <span className="text-accent">Made Simple</span>
           </h1>
-          <p className="text-xl text-muted mb-8 leading-relaxed">
+          <p className="text-xl text-foreground mb-8 leading-relaxed">
             Streamline your workflow with easy-to-use AI tools designed
             specifically for K-12 school district staff. No technical expertise
             required.
@@ -36,25 +36,31 @@ export default function Home() {
       <div className="bg-input py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="card">
-              <h3 className="text-lg font-semibold mb-2">Flowchart Creator</h3>
+            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-2 text-foreground leading-8">
+                Flowchart Creator
+              </h3>
               <p className="text-muted">
                 Transform text descriptions into professional flowcharts
                 instantly. Perfect for documenting processes and procedures.
               </p>
             </div>
-            <div className="card">
-              <h3 className="text-lg font-semibold mb-2">Easy to Use</h3>
+            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-2 text-foreground leading-8">
+                Easy to Use
+              </h3>
               <p className="text-muted">
                 No complex setup or training needed. Just describe what you
                 want, and let AI do the work.
               </p>
             </div>
-            <div className="card">
-              <h3 className="text-lg font-semibold mb-2">More Coming Soon</h3>
+            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-2 text-foreground leading-8">
+                More Coming Soon
+              </h3>
               <p className="text-muted">
-                We&apos;re building more AI tools to help streamline your work.
-                Stay tuned for updates.
+                We are building more AI tools to help streamline your work. Stay
+                tuned for updates.
               </p>
             </div>
           </div>

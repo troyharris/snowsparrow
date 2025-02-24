@@ -11,7 +11,17 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        accent: "#05595f",
+        muted: "var(--muted)",
+        "muted-foreground": "var(--muted-foreground)",
+        border: "var(--border)",
+        input: "var(--input)",
+        accent: "var(--accent)",
+        "accent-foreground": "var(--accent-foreground)",
+        "accent-hover": "var(--accent-hover)",
+        ring: "var(--ring)",
+      },
+      borderRadius: {
+        radius: "var(--radius)",
       },
       fontFamily: {
         sans: ["Manrope", "sans-serif"],

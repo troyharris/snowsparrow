@@ -79,17 +79,19 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="card w-full max-w-md">
+      <div className="bg-background border border-border rounded-md p-6 shadow-sm w-full max-w-md">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl leading-9 font-semibold tracking-tight text-foreground">
               Account Settings
             </h1>
-            <p className="text-muted mt-1">Manage your profile information</p>
+            <p className="text-muted mt-1 text-foreground leading-relaxed">
+              Manage your profile information
+            </p>
           </div>
           <form action="/auth/signout" method="post">
             <button
-              className="bg-input hover:bg-border text-foreground font-medium py-2 px-4 rounded-lg transition-colors"
+              className="bg-accent hover:bg-border text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 focus:ring-2 focus:ring-ring"
               type="submit"
             >
               Sign out
@@ -110,7 +112,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               type="text"
               value={user?.email}
               disabled
-              className="w-full bg-muted cursor-not-allowed"
+              className="w-full bg-muted cursor-not-allowed bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
             />
           </div>
 
@@ -126,7 +128,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               type="text"
               value={fullname || ""}
               onChange={(e) => setFullname(e.target.value)}
-              className="w-full"
+              className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
               placeholder="Your name"
             />
           </div>
@@ -143,7 +145,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               type="text"
               value={username || ""}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full"
+              className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
               placeholder="@username"
             />
           </div>
@@ -160,14 +162,14 @@ export default function AccountForm({ user }: { user: User | null }) {
               type="url"
               value={website || ""}
               onChange={(e) => setWebsite(e.target.value)}
-              className="w-full"
+              className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
               placeholder="https://your-website.com"
             />
           </div>
 
           <div className="pt-4">
             <button
-              className="w-full bg-accent hover:bg-accent-hover text-accent-foreground font-medium py-2.5 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-accent hover:bg-accent-hover text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-ring"
               onClick={() =>
                 updateProfile({ fullname, username, website, avatar_url })
               }
