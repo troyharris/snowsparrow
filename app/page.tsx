@@ -1,69 +1,90 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Card, CardHeader, CardContent } from "@/components/shared/Card";
+
+// Tool data array for easy addition of new tools
+const tools = [
+  {
+    name: "Flowchart Creator",
+    description:
+      "Transform text descriptions into professional flowcharts instantly. Perfect for documenting processes and procedures.",
+    icon: "/file.svg",
+    href: "/mermaid",
+  },
+  {
+    name: "Employee Handbook Chat",
+    description:
+      "Chat with an AI assistant about employee handbook questions and get instant answers.",
+    icon: "/globe.svg",
+    href: "/handbook",
+  },
+];
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
-      {/* Hero section */}
-      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="text-center sm:text-left max-w-3xl">
-          <h1 className="text-3xl leading-10 font-bold tracking-tight text-foreground sm:text-5xl">
-            AI Tools for Education,{" "}
-            <span className="text-accent">Made Simple</span>
-          </h1>
-          <p className="text-xl text-foreground mb-8 leading-relaxed">
-            Streamline your workflow with easy-to-use AI tools designed
-            specifically for K-12 school district staff. No technical expertise
-            required.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start">
-            <Link
-              href="/mermaid"
-              className="inline-flex items-center justify-center px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-accent-hover transition-colors"
-            >
-              Create Flowchart
+      {/* Tools Grid Section */}
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-8">
+          Available Tools
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {tools.map((tool) => (
+            <Link key={tool.name} href={tool.href} className="block group">
+              <Card className="h-full transition-transform hover:scale-[1.02]">
+                <CardHeader title={tool.name} description={tool.description} />
+                <CardContent className="mt-4">
+                  <div className="flex justify-center">
+                    <Image
+                      src={tool.icon}
+                      alt={`${tool.name} icon`}
+                      width={48}
+                      height={48}
+                      className="opacity-80 group-hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center px-6 py-3 bg-input text-foreground font-medium rounded-lg hover:bg-border transition-colors"
-            >
-              Sign In
-            </Link>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Features section */}
+      {/* AI Disclaimer Section */}
       <div className="bg-input py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
-              <h3 className="text-xl font-semibold mb-2 text-foreground leading-8">
-                Flowchart Creator
-              </h3>
-              <p className="text-muted">
-                Transform text descriptions into professional flowcharts
-                instantly. Perfect for documenting processes and procedures.
-              </p>
-            </div>
-            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
-              <h3 className="text-xl font-semibold mb-2 text-foreground leading-8">
-                Easy to Use
-              </h3>
-              <p className="text-muted">
-                No complex setup or training needed. Just describe what you
-                want, and let AI do the work.
-              </p>
-            </div>
-            <div className="bg-background border border-border rounded-md p-6 shadow-sm">
-              <h3 className="text-xl font-semibold mb-2 text-foreground leading-8">
-                More Coming Soon
-              </h3>
-              <p className="text-muted">
-                We are building more AI tools to help streamline your work. Stay
-                tuned for updates.
-              </p>
-            </div>
-          </div>
+          <Card>
+            <CardHeader
+              title="Important AI Usage Guidelines"
+              description="Please review these important guidelines for using AI tools in our district."
+            />
+            <CardContent>
+              <div className="space-y-4 text-muted">
+                <p>
+                  • Do not share sensitive data or personally identifiable
+                  information about students or staff.
+                </p>
+                <p>
+                  • Be aware that AI can sometimes hallucinate or make up
+                  information. Always verify important information.
+                </p>
+                <p>
+                  • Follow district guidelines for appropriate AI use in
+                  education.
+                </p>
+                <p className="pt-4">
+                  <Link
+                    href="https://www.fusd1.org/site/handlers/filedownload.ashx?moduleinstanceid=2513&dataid=52908&FileName=FUSD_AI_Guidance.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:underline"
+                  >
+                    View District AI Guidance Document →
+                  </Link>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

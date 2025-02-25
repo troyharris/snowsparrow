@@ -13,6 +13,7 @@
   - Account page (/account)
   - Error page (/error)
   - Mermaid tool page (/mermaid)
+  - Handbook tool page (/handbook)
 - Basic styling implemented with Tailwind CSS
 - Project structure established:
   - App router configuration
@@ -37,11 +38,13 @@
     - [x] LoadingSpinner component
     - [x] ErrorMessage component
     - [x] SuccessMessage component
+    - [x] ChatInterface component
   - [x] Component documentation
   - [ ] Unit tests
   - [ ] Error boundaries
 
 - Mermaid flowchart creation tool
+
   - [x] User input interface
   - [x] OpenRouter API integration
   - [x] Flowchart rendering
@@ -58,11 +61,21 @@
     - [x] Add loading states
     - [x] Handle success/error states
 
+- Employee Handbook AI tool
+  - [x] Shared chat interface implementation
+  - [x] Handbook-specific prompts
+  - [x] API endpoint
+  - [x] Loading states
+  - [x] Error handling
+  - [ ] Save chat history functionality
+  - [ ] User preferences
+
 ## Planned Features
 
 - User dashboard
   - Activity history
   - Saved flowcharts
+  - Saved handbook chats
   - User preferences
 - Additional AI tools (future)
   - Reuse AI service layer
@@ -71,16 +84,14 @@
 - Analytics and usage tracking
 - User feedback system
 - Advanced styling and UI polish
-- Employee Handbook AI tool
-  - Shared chat interface
-  - Handbook-specific prompts
-  - API endpoint
 
 ## Known Issues
 
 - Storage access policies need to be set up in Supabase Dashboard
 - Unit tests needed for components and services
 - Error boundaries not yet implemented
+- Chat history persistence not implemented
+- User preferences not saved
 
 ## Testing Status
 
@@ -88,10 +99,12 @@
   - Shared UI components
   - AI service layer
   - API routes
+  - ChatInterface component
 - Integration tests needed:
   - OpenRouter API integration
   - Supabase storage integration
   - Authentication flow
+  - Handbook chat functionality
 - End-to-end testing plan required
 
 ## Deployment Status
@@ -108,6 +121,7 @@
 - Memory Bank initialized and maintained
 - Shared components documented
 - AI service layer documented
+- ChatInterface component documented
 - API documentation needed
 - User guide pending
 - Testing documentation needed
@@ -136,7 +150,14 @@
    - Test storage functionality
    - Document storage integration
 
-4. Deployment
+4. Chat History Implementation
+
+   - Design database schema
+   - Implement save functionality
+   - Add user preferences
+   - Test persistence
+
+5. Deployment
    - Environment setup
    - Production deployment
    - Monitoring configuration
