@@ -92,6 +92,13 @@ flowchart TD
 - Type-safe interfaces
 - Modular component design
 
+### Shared Chat Interface Pattern
+
+- Reusable `ChatInterface` component in `components/shared/`
+- Configurable with `apiEndpoint`, `systemPromptKey`, `modelKey`
+- Handles chat history, input, and AI interaction
+- Used in tool-specific pages (e.g., `/handbook/page.tsx`)
+
 ## Security Patterns
 
 - Environment variable protection

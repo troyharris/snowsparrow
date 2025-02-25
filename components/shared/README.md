@@ -30,6 +30,20 @@ A container component with optional header and content sections.
 </Card>
 ```
 
+### ChatInterface
+
+A reusable chat interface component for AI-powered tools.
+
+```tsx
+<ChatInterface
+  apiEndpoint="/api/endpoint" // API endpoint to send messages to
+  title="Chat Title" // Optional title for the chat card
+  description="Description text" // Optional description
+  placeholder="Type your message..." // Optional placeholder for the input
+  className="optional-classes" // Optional additional classes
+/>
+```
+
 ### ErrorMessage
 
 A component for displaying error messages with a consistent style.
@@ -96,6 +110,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  ChatInterface,
   ErrorMessage,
   LoadingSpinner,
   Select,

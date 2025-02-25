@@ -71,6 +71,10 @@
 - Analytics and usage tracking
 - User feedback system
 - Advanced styling and UI polish
+- Employee Handbook AI tool
+  - Shared chat interface
+  - Handbook-specific prompts
+  - API endpoint
 
 ## Known Issues
 

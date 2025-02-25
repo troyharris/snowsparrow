@@ -28,12 +28,13 @@ export const getModelById = (modelId: string): AIModel | undefined => {
   return Object.values(models).find((model) => model.id === modelId);
 };
 
-export type AITask = "mermaid" | "code" | "text" | string;
+export type AITask = "mermaid" | "code" | "text" | "handbook" | string;
 
 export const modelPreferences: Record<AITask, string[]> = {
   mermaid: ["gemini-2-flash"], // Preferred models in order
   code: ["gemini-2-flash"],
   text: ["gemini-2-flash"],
+  handbook: ["gemini-2-flash"],
 };
 
 export const getModelForTask = (task: AITask): AIModel => {
