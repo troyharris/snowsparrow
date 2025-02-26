@@ -7,6 +7,7 @@
 - Refining shared component architecture
 - Enhancing error handling and validation
 - Testing and documentation improvements
+- Modified authentication flow to redirect to homepage after login/signup
 
 ## Recent Changes
 

@@ -5,8 +5,19 @@
 - Project initialization
 - Basic Next.js setup with App Router
 - Supabase integration
-- Authentication system foundation
-- Implemented middleware to protect all routes
+  - Authentication system foundation
+  - Implemented middleware to protect all routes
+  - Modified authentication flow to redirect to homepage after login/signup
+# Progress Tracking
+
+## Completed Features
+
+- Project initialization
+- Basic Next.js setup with App Router
+- Supabase integration
+  - Authentication system foundation
+  - Implemented middleware to protect all routes
+  - Modified authentication flow to redirect to homepage after login/signup
 - Core application pages created:
   - Landing page (/)
   - Login page (/login)
