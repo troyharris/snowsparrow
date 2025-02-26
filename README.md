@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Snowsparrow
 
-## Getting Started
+Snowsparrow is a web application designed to provide K-12 public school district employees with easy-to-use AI tools that enhance their work efficiency. The platform aims to make AI technology accessible without requiring deep technical knowledge.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Mermaid Flowchart Creator
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The initial feature is a Mermaid flowchart creation tool that takes a plain English description of a workflow and generates a visual flowchart. Users can input their workflow description, and the tool will automatically generate a corresponding Mermaid flowchart code, render it visually, and allow users to download the flowchart as a PNG file.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Future AI Tools
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Snowsparrow is built with the intention of housing multiple AI tools in the future. Each tool will follow the same principles of simplicity and ease of use, focusing on practical applications for the education sector.
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend**: Next.js 15+ (App Router), TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL database, authentication, file storage)
+- **AI Integration**: OpenRouter API for AI processing
+- **Deployment**: Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To run the project locally, follow these steps:
 
-## Deploy on Vercel
+1. Clone the repository: `git clone https://github.com/your-repo/snowsparrow.git`
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are welcome! Please follow the established coding standards and patterns. Before making significant changes, it's recommended to discuss them in an issue or with the project maintainers.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
