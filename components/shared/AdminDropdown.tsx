@@ -6,19 +6,9 @@ import { createClient } from "@/utils/supabase/client";
 
 const adminPages = [
   {
-    name: "Models",
-    href: "/admin/models",
+    name: "Admin Dashboard",
+    href: "/admin",
     icon: "/window.svg",
-  },
-  {
-    name: "Prompts",
-    href: "/admin/prompts",
-    icon: "/file.svg",
-  },
-  {
-    name: "Users",
-    href: "/admin/users",
-    icon: "/globe.svg",
   },
 ];
 

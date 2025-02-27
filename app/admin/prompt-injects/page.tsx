@@ -1,47 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/shared/Button";
 import { Card, CardContent } from "@/components/shared/Card";
 
 export default async function PromptInjectsAdminPage() {
-  console.log("Admin Prompt Injects Page: Creating regular Supabase client");
-  // First create a regular client to check authentication
-  const regularClient = await createClient();
-  console.log("Admin Prompt Injects Page: Regular Supabase client created");
-
-  // Check if user is authenticated
-  console.log("Admin Prompt Injects Page: Checking user authentication");
-  const {
-    data: { user },
-  } = await regularClient.auth.getUser();
-  console.log("Admin Prompt Injects Page: User authentication checked", {
-    isAuthenticated: !!user,
-    email: user?.email,
-  });
-
-  if (!user) {
-    console.log("Admin Prompt Injects Page: User not authenticated, redirecting");
-    redirect("/login");
-  }
-
-  // Check if user is admin by querying the profiles table
-  console.log("Admin Prompt Injects Page: Checking if user is admin");
-  const { data: profile } = await regularClient
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile?.is_admin) {
-    console.log("Admin Prompt Injects Page: User not admin, redirecting");
-    redirect("/");
-  }
-
-  // Now create a service role client for database operations
-  console.log("Admin Prompt Injects Page: Creating service role Supabase client");
+  // Create a service role client for database operations
   const supabase = await createClient(true);
-  console.log("Admin Prompt Injects Page: Service role Supabase client created");
 
   // Fetch prompt injects
   console.log("Admin Prompt Injects Page: Fetching prompt injects");

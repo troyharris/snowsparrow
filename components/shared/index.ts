@@ -6,3 +6,4 @@ export { LoadingSpinner } from "./LoadingSpinner";
 export { Select } from "./Select";
 export { SuccessMessage } from "./SuccessMessage";
 export { Textarea } from "./Textarea";
+export { default as AdminSidebar } from "./AdminSidebar";
