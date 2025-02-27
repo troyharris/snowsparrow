@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { openRouterClient } from "@/lib/ai/clients/openrouter";
-import { getModelForTask, getModelByApiString } from "@/lib/ai/config/models";
-import { getPromptByName, getPromptForTask, processPrompt } from "@/lib/ai/config/prompts";
+import { getModelForTask } from "@/lib/ai/config/models";
+import { getPromptByName, processPrompt } from "@/lib/ai/config/prompts";
 import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
 
     // Get the prompt - either from promptId or use a default system prompt
     let promptContent;
-    let messages;
+    //let messages;
 
     if (promptId) {
       console.log(`Getting prompt by ID: ${promptId}`);
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     }
 
     // Format messages for OpenRouter
-    messages = [
+    const messages = [
       {
         role: "system",
         content: promptContent,

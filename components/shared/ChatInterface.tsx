@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "./Button";
 import { Textarea } from "./Textarea";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -65,19 +65,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [modelError, setModelError] = useState<string | null>(null);
   const [promptError, setPromptError] = useState<string | null>(null);
   
-  // Fetch models and prompts on component mount
-  useEffect(() => {
-    if (showModelSelector) {
-      fetchModels();
-    }
-    
-    if (showPromptSelector) {
-      fetchPrompts();
-    }
-  }, [showModelSelector, showPromptSelector, toolName]);
-  
   // Fetch available models
-  const fetchModels = async () => {
+  const fetchModels = useCallback(async () => {
     setIsLoadingModels(true);
     setModelError(null);
     
@@ -103,10 +92,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     } finally {
       setIsLoadingModels(false);
     }
-  };
+  }, []);
   
   // Fetch available prompts for the tool
-  const fetchPrompts = async () => {
+  const fetchPrompts = useCallback(async () => {
     setIsLoadingPrompts(true);
     setPromptError(null);
     
@@ -130,7 +119,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     } finally {
       setIsLoadingPrompts(false);
     }
-  };
+  }, [toolName]);
+  
+  // Fetch models and prompts on component mount
+  useEffect(() => {
+    if (showModelSelector) {
+      fetchModels();
+    }
+    
+    if (showPromptSelector) {
+      fetchPrompts();
+    }
+  }, [showModelSelector, showPromptSelector, fetchModels, fetchPrompts]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,7 +148,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     setIsLoading(true);
     try {
       // Prepare request body based on available selections
-      const requestBody: any = { message: userMessage };
+      interface RequestBody {
+        message: string;
+        modelId?: string;
+        promptId?: string;
+      }
+      
+      const requestBody: RequestBody = { message: userMessage };
       
       // Add model and prompt IDs if they're selected
       if (showModelSelector && selectedModelId) {

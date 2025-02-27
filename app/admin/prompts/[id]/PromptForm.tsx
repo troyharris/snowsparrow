@@ -7,7 +7,6 @@ import { Button } from "@/components/shared/Button";
 import { Textarea } from "@/components/shared/Textarea";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { SuccessMessage } from "@/components/shared/SuccessMessage";
-import { Select } from "@/components/shared/Select";
 
 import { PromptInject } from "@/lib/ai/config/prompts";
 
