@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { openRouterClient } from "@/lib/ai/clients/openrouter";
 import { getModelForTask } from "@/lib/ai/config/models";
-import { getPromptForTask } from "@/lib/ai/prompts/mermaid";
+import { getPromptForTask } from "@/lib/ai/config/prompts";
 
 export async function POST(request: Request) {
   try {
@@ -22,11 +22,8 @@ export async function POST(request: Request) {
     }
 
     // Get the appropriate model and prompt for the task
-    const model = getModelForTask("mermaid");
-    const prompt = getPromptForTask(
-      promptType as "default" | "technical",
-      inputText
-    );
+    const model = await getModelForTask("mermaid");
+    const prompt = await getPromptForTask("mermaid", promptType, inputText);
 
     try {
       // Generate the Mermaid code

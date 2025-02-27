@@ -14,6 +14,13 @@ flowchart TD
     API --> Supabase[Supabase Backend]
     Supabase --> DB[(Database)]
     Supabase --> Storage[(File Storage)]
+    Models --> DB
+
+    subgraph Admin[Admin Interface]
+        ModelAdmin[Model Management]
+    end
+
+    Admin --> API
 
     subgraph UI[UI Layer]
         SharedComponents[Shared Components]
@@ -22,6 +29,7 @@ flowchart TD
     end
 
     Client --> UI
+    Client --> Admin
 ```
 
 ## Core Technical Patterns
@@ -55,11 +63,14 @@ flowchart TD
 ### AI Service Layer
 
 - Model configuration in lib/ai/config/
-  - Model definitions and metadata
+  - Database-driven model definitions and metadata
   - Task-specific model selection
+  - Model caching for performance
+  - Admin interface for model management
 - Prompt templates in lib/ai/prompts/
   - Task-specific prompts
   - Prompt variants
+  - Future database-driven prompts
 - API clients in lib/ai/clients/
   - OpenRouter client
   - Future AI service clients
@@ -106,3 +117,9 @@ flowchart TD
 - Input validation
 - Rate limiting
 - CORS policies
+- Row-level security in Supabase
+- Service role access pattern:
+  - Enhanced Supabase client with service role option
+  - Selective use of service role for admin operations
+  - API routes bypass authentication when needed
+  - Protected database tables accessed via service role

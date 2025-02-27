@@ -94,6 +94,9 @@
 
 - Authentication system
 - Database operations
+  - Row-level security policies
+  - Service role access for admin operations
+  - Enhanced client with role selection
 - File storage system
 - Storage access policies
 

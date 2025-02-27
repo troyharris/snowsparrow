@@ -1,52 +1,111 @@
+import { createClient } from "@/utils/supabase/server";
+
 export interface AIModel {
   id: string;
-  name: string;
-  provider: string;
-  contextWindow: number;
-  costPer1kTokens: number;
-  strengths: string[];
+  display_name: string;
+  api_string: string;
+  description: string;
+  supports_vision: boolean;
+  supports_thinking: boolean;
 }
 
-export const models: Record<string, AIModel> = {
-  "gemini-2-flash": {
-    id: "google/gemini-2.0-flash-001",
-    name: "Gemini 2.0 Flash",
-    provider: "Google",
-    contextWindow: 32000,
-    costPer1kTokens: 0.0005,
-    strengths: [
-      "Fast response time",
-      "Good at structured output",
-      "Cost effective",
-      "Large context window",
-    ],
-  },
-  // Add more models as needed
-};
+// Cache for models to avoid frequent database calls
+let modelsCache: AIModel[] | null = null;
+let lastFetchTime = 0;
+const CACHE_TTL = 60 * 1000; // 1 minute cache TTL
 
-export const getModelById = (modelId: string): AIModel | undefined => {
-  return Object.values(models).find((model) => model.id === modelId);
-};
+/**
+ * Fetches all models from the database
+ */
+export async function getAllModels(): Promise<AIModel[]> {
+  const now = Date.now();
+
+  // Return cached models if available and not expired
+  if (modelsCache && now - lastFetchTime < CACHE_TTL) {
+    return modelsCache;
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("models").select("*");
+
+    if (error) {
+      console.error("Error fetching models:", error);
+      throw error;
+    }
+
+    // Update cache
+    modelsCache = data;
+    lastFetchTime = now;
+
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch models:", error);
+    // If cache exists, return it even if expired
+    if (modelsCache) {
+      return modelsCache;
+    }
+    // Fallback to empty array if no cache
+    return [];
+  }
+}
+
+/**
+ * Gets a model by its API string
+ */
+export async function getModelByApiString(
+  apiString: string
+): Promise<AIModel | undefined> {
+  const models = await getAllModels();
+  return models.find((model) => model.api_string === apiString);
+}
 
 export type AITask = "mermaid" | "code" | "text" | "handbook" | string;
 
+// Task to model mapping - this could also be moved to the database in the future
 export const modelPreferences: Record<AITask, string[]> = {
-  mermaid: ["gemini-2-flash"], // Preferred models in order
-  code: ["gemini-2-flash"],
-  text: ["gemini-2-flash"],
-  handbook: ["gemini-2-flash"],
+  mermaid: ["google/gemini-2.0-flash-001"], // Preferred models in order by API string
+  code: ["google/gemini-2.0-flash-001"],
+  text: ["google/gemini-2.0-flash-001"],
+  handbook: ["google/gemini-2.0-flash-001"],
 };
 
-export const getModelForTask = (task: AITask): AIModel => {
-  const preferredModels = modelPreferences[task] || modelPreferences["text"];
+/**
+ * Gets the appropriate model for a specific task
+ */
+export async function getModelForTask(task: AITask): Promise<AIModel> {
+  console.log(`getModelForTask: Getting model for task: ${task}`);
+
+  const preferredApiStrings =
+    modelPreferences[task] || modelPreferences["text"];
+  console.log(`getModelForTask: Preferred API strings:`, preferredApiStrings);
+
+  console.log(`getModelForTask: Fetching all models`);
+  const allModels = await getAllModels();
+  console.log(
+    `getModelForTask: All models:`,
+    allModels.map((m) => m.api_string)
+  );
 
   // Find the first available preferred model
-  for (const modelKey of preferredModels) {
-    if (models[modelKey]) {
-      return models[modelKey];
+  for (const apiString of preferredApiStrings) {
+    console.log(
+      `getModelForTask: Looking for model with API string: ${apiString}`
+    );
+    const model = allModels.find((m) => m.api_string === apiString);
+    if (model) {
+      console.log(`getModelForTask: Found model:`, model);
+      return model;
     }
   }
 
-  // Fallback to default model
-  return models["gemini-2-flash"];
-};
+  // Fallback to first available model
+  if (allModels.length > 0) {
+    console.log(`getModelForTask: Using fallback model:`, allModels[0]);
+    return allModels[0];
+  }
+
+  // If no models available, throw error
+  console.error(`getModelForTask: No AI models available`);
+  throw new Error("No AI models available");
+}

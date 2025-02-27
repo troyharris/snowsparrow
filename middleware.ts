@@ -5,6 +5,11 @@ export async function middleware(request: NextRequest) {
   // update user's auth session
   const res = await updateSession(request);
 
+  // Allow API routes to bypass authentication
+  if (request.nextUrl.pathname.startsWith("/api/")) {
+    return res;
+  }
+
   const authenticated = await isAuthenticated(request);
 
   if (!authenticated && request.nextUrl.pathname !== "/login") {

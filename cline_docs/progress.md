@@ -8,6 +8,7 @@
   - Authentication system foundation
   - Implemented middleware to protect all routes
   - Modified authentication flow to redirect to homepage after login/signup
+
 # Progress Tracking
 
 ## Completed Features
@@ -39,6 +40,9 @@
 
   - [x] AI service layer implementation
     - [x] Model configuration
+      - [x] Database-driven models
+      - [x] Models API endpoint
+      - [x] Admin interface for model management
     - [x] Prompt templates
     - [x] OpenRouter client
   - [x] Shared UI components
@@ -78,6 +82,8 @@
   - [x] API endpoint
   - [x] Loading states
   - [x] Error handling
+  - [x] Database integration with service role access
+  - [x] Row-level security bypass for protected tables
   - [ ] Save chat history functionality
   - [ ] User preferences
 
@@ -92,6 +98,10 @@
   - Reuse AI service layer
   - Follow established patterns
   - Share UI components
+  - Database-driven configuration
+- Database-driven system prompts
+  - Admin interface for prompt management
+  - Versioning for prompts and models
 - Analytics and usage tracking
 - User feedback system
 - Advanced styling and UI polish

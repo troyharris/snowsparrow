@@ -32,7 +32,17 @@ export class OpenRouterClient {
     model: AIModel,
     messages: Array<{ role: string; content: string }>
   ): Promise<string> {
+    console.log(
+      "OpenRouterClient: Generating text with model:",
+      model.api_string
+    );
+    console.log(
+      "OpenRouterClient: Messages:",
+      JSON.stringify(messages, null, 2)
+    );
+
     try {
+      console.log("OpenRouterClient: Sending request to OpenRouter API");
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: "POST",
         headers: {
@@ -40,13 +50,20 @@ export class OpenRouterClient {
           Authorization: `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
-          model: model.id,
+          model: model.api_string,
           messages,
         }),
       });
+      console.log("OpenRouterClient: Response status:", response.status);
 
       if (!response.ok) {
+        console.error(
+          "OpenRouterClient: Response not OK:",
+          response.status,
+          response.statusText
+        );
         const errorData = (await response.json()) as OpenRouterError;
+        console.error("OpenRouterClient: Error data:", errorData);
         throw new Error(
           `OpenRouter API error: ${
             errorData.error?.message || response.statusText
@@ -54,15 +71,21 @@ export class OpenRouterClient {
         );
       }
 
+      console.log("OpenRouterClient: Parsing response JSON");
       const data = (await response.json()) as OpenRouterResponse;
+      console.log("OpenRouterClient: Response data:", data);
+
       const generatedText = data.choices[0]?.message?.content;
 
       if (!generatedText) {
+        console.error("OpenRouterClient: No content generated");
         throw new Error("No content generated from OpenRouter API");
       }
 
+      console.log("OpenRouterClient: Successfully generated text");
       return generatedText;
     } catch (error) {
+      console.error("OpenRouterClient: Error generating text:", error);
       if (error instanceof Error) {
         throw new Error(`Failed to generate text: ${error.message}`);
       }
