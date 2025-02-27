@@ -8,8 +8,9 @@
 - Enhancing error handling and validation
 - Testing and documentation improvements
 - Modified authentication flow to redirect to homepage after login/signup
-- Database-driven models configuration for AI tools
+- Database-driven models and prompts configuration for AI tools
 - User administration and role-based access control
+- Prompt management system with reusable prompt components (injects)
 
 ## Recent Changes
 
@@ -21,10 +22,12 @@
   - Updated row-level security policies for admin access
 - Created AI service layer:
   - Database-driven model configuration in lib/ai/config/models.ts
+  - Database-driven prompt management system in lib/ai/config/prompts.ts
   - Prompt templates in lib/ai/prompts/mermaid.ts and handbook.ts
   - OpenRouter client in lib/ai/clients/openrouter.ts
   - Models API endpoint for CRUD operations
-  - Admin interface for model management
+  - Prompts and prompt injects API endpoints for CRUD operations
+  - Admin interfaces for model, prompt, and prompt inject management
 - Created shared UI components:
   - Button with variants
   - Card with header and content sections
@@ -58,6 +61,7 @@
 - Following component-based architecture
 - Moving configuration to database for flexibility
 - Implementing role-based access control with admin privileges
+- Using modular prompt architecture with reusable prompt components (injects)
 
 ## Current Considerations
 
@@ -73,6 +77,8 @@
 - Admin interface access control
 - Role-based security implementation
 - User management and administration
+- Prompt caching and performance optimization
+- Prompt composition and reuse patterns
 
 ### Product
 
@@ -91,11 +97,11 @@
    - Test storage functionality
    - Document storage integration
 
-2. Expand database-driven configuration:
+2. Enhance database-driven prompt system:
 
-   - Move system prompts to database
-   - Create admin interfaces for prompt management
-   - Implement versioning for prompts and models
+   - Improve prompt inject linking interface
+   - Add versioning for prompts and models
+   - Implement prompt testing and validation
 
 3. Implement testing:
 

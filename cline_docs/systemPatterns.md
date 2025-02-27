@@ -9,16 +9,32 @@ flowchart TD
     Next --> API[API Routes]
     API --> AIService[AI Service Layer]
     AIService --> Models[Model Config]
-    AIService --> Prompts[Prompt Templates]
+    AIService --> PromptSystem[Prompt System]
     AIService --> OpenRouter[OpenRouter Client]
     API --> Supabase[Supabase Backend]
     Supabase --> DB[(Database)]
     Supabase --> Storage[(File Storage)]
     Models --> DB
+    
+    subgraph PromptSystem
+        Prompts[Prompts]
+        PromptInjects[Prompt Injects]
+        PromptLinks[Prompt-Inject Links]
+        PromptProcessor[Prompt Processor]
+        
+        Prompts --> PromptProcessor
+        PromptInjects --> PromptProcessor
+        PromptLinks --> PromptProcessor
+    end
+    
+    Prompts --> DB
+    PromptInjects --> DB
+    PromptLinks --> DB
 
     subgraph Admin[Admin Interface]
         ModelAdmin[Model Management]
         PromptAdmin[Prompt Management]
+        InjectAdmin[Prompt Inject Management]
         UserAdmin[User Administration]
     end
 
@@ -77,10 +93,17 @@ flowchart TD
   - Task-specific model selection
   - Model caching for performance
   - Admin interface for model management
+- Prompt management in lib/ai/config/
+  - Database-driven prompt definitions
+  - Prompt injects for reusable prompt components
+  - Prompt linking system for composition
+  - Prompt caching for performance
+  - Admin interfaces for prompt and inject management
+  - Prompt processing with inject substitution
 - Prompt templates in lib/ai/prompts/
   - Task-specific prompts
   - Prompt variants
-  - Future database-driven prompts
+  - Legacy file-based prompts
 - API clients in lib/ai/clients/
   - OpenRouter client
   - Future AI service clients
@@ -133,8 +156,10 @@ flowchart TD
   - Selective use of service role for admin operations
   - API routes bypass authentication when needed
   - Protected database tables accessed via service role
+  - Prompt and model management using service role
 - Role-based access control:
   - is_admin flag in profiles table
   - Admin-specific navigation menu
   - Admin-only API endpoints
   - Row-level security policies for admin operations
+  - Admin-only access to prompt and model management

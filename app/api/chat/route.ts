@@ -1,0 +1,143 @@
+import { NextResponse } from "next/server";
+import { openRouterClient } from "@/lib/ai/clients/openrouter";
+import { getModelForTask, getModelByApiString } from "@/lib/ai/config/models";
+import { getPromptByName, getPromptForTask, processPrompt } from "@/lib/ai/config/prompts";
+import { createClient } from "@/utils/supabase/server";
+
+export async function POST(request: Request) {
+  try {
+    const { message, modelId, promptId } = await request.json();
+    console.log("Chat API received message:", message);
+    console.log("Chat API received modelId:", modelId);
+    console.log("Chat API received promptId:", promptId);
+
+    if (!message?.trim()) {
+      return NextResponse.json(
+        { error: "Input text is required" },
+        { status: 400 }
+      );
+    }
+
+    // Create Supabase client with service role for accessing protected tables
+    console.log("Creating Supabase client with service role");
+    const supabase = await createClient(true);
+    console.log("Supabase client created with service role");
+
+    // Get the model - either from modelId or default for chat task
+    let model;
+    if (modelId) {
+      console.log(`Getting model by ID: ${modelId}`);
+      const { data: modelData, error: modelError } = await supabase
+        .from("models")
+        .select("*")
+        .eq("id", modelId)
+        .single();
+
+      if (modelError) {
+        console.error("Error fetching model by ID:", modelError);
+        console.log("Falling back to default model for chat task");
+        model = await getModelForTask("chat");
+      } else {
+        model = modelData;
+      }
+    } else {
+      console.log("Using default model for chat task");
+      model = await getModelForTask("chat");
+    }
+
+    console.log("Selected model:", model);
+
+    // Get the prompt - either from promptId or use a default system prompt
+    let promptContent;
+    let messages;
+
+    if (promptId) {
+      console.log(`Getting prompt by ID: ${promptId}`);
+      const { data: promptData, error: promptError } = await supabase
+        .from("prompts")
+        .select("*")
+        .eq("id", promptId)
+        .single();
+
+      if (promptError) {
+        console.error("Error fetching prompt by ID:", promptError);
+        console.log("Falling back to default chat prompt");
+        
+        // Check if chat_default prompt exists
+        const defaultPrompt = await getPromptByName("chat_default");
+        
+        if (defaultPrompt) {
+          console.log("Using chat_default prompt");
+          promptContent = await processPrompt(defaultPrompt);
+        } else {
+          console.log("No default chat prompt found, using generic system prompt");
+          promptContent = "You are a helpful AI assistant. Provide accurate, helpful, and concise responses.";
+        }
+      } else {
+        console.log("Using selected prompt:", promptData.name);
+        promptContent = await processPrompt(promptData);
+      }
+    } else {
+      console.log("No prompt ID provided, checking for default chat prompt");
+      
+      // Check if chat_default prompt exists
+      const defaultPrompt = await getPromptByName("chat_default");
+      
+      if (defaultPrompt) {
+        console.log("Using chat_default prompt");
+        promptContent = await processPrompt(defaultPrompt);
+      } else {
+        console.log("No default chat prompt found, using generic system prompt");
+        promptContent = "You are a helpful AI assistant. Provide accurate, helpful, and concise responses.";
+      }
+    }
+
+    // Format messages for OpenRouter
+    messages = [
+      {
+        role: "system",
+        content: promptContent,
+      },
+      {
+        role: "user",
+        content: message,
+      },
+    ];
+
+    console.log("Formatted messages:", JSON.stringify(messages, null, 2));
+
+    try {
+      // Generate the response
+      console.log("Generating response with OpenRouter");
+      const aiResponse = await openRouterClient.generateText(
+        model,
+        messages
+      );
+      console.log("Response generated successfully");
+
+      return NextResponse.json({ response: aiResponse });
+    } catch (genError) {
+      console.error("Error generating response:", genError);
+      console.error("Error details:", JSON.stringify(genError, null, 2));
+      return NextResponse.json(
+        {
+          error:
+            "Failed to generate response. Please try rephrasing your question.",
+        },
+        { status: 422 }
+      );
+    }
+  } catch (error) {
+    console.error("API error:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
+  }
+}

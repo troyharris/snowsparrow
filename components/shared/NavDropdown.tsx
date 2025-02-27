@@ -14,6 +14,11 @@ const tools = [
     href: "/handbook",
     icon: "/globe.svg",
   },
+  {
+    name: "AI Chat",
+    href: "/chat",
+    icon: "/window.svg",
+  },
 ];
 
 export default function NavDropdown() {

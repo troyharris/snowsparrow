@@ -44,6 +44,12 @@
       - [x] Database-driven models
       - [x] Models API endpoint
       - [x] Admin interface for model management
+    - [x] Prompt management
+      - [x] Database-driven prompts
+      - [x] Prompts API endpoint
+      - [x] Admin interface for prompt management
+      - [x] Prompt injects for reusable components
+      - [x] Prompt inject linking system
     - [x] Prompt templates
     - [x] OpenRouter client
   - [x] Shared UI components
@@ -114,9 +120,10 @@
   - Follow established patterns
   - Share UI components
   - Database-driven configuration
-- Database-driven system prompts
-  - Admin interface for prompt management
+- Prompt management enhancements
+  - Improved prompt inject linking interface
   - Versioning for prompts and models
+  - Prompt testing and validation
 - Analytics and usage tracking
 - User feedback system
 - Advanced styling and UI polish

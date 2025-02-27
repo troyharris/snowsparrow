@@ -68,6 +68,7 @@ export const modelPreferences: Record<AITask, string[]> = {
   code: ["google/gemini-2.0-flash-001"],
   text: ["google/gemini-2.0-flash-001"],
   handbook: ["google/gemini-2.0-flash-001"],
+  chat: ["google/gemini-2.0-flash-001"],
 };
 
 /**

@@ -19,8 +19,10 @@
 
 - Next.js API routes
 - AI service layer:
-  - Model configuration
+  - Database-driven model configuration
+  - Database-driven prompt management
   - Prompt templates
+  - Prompt injects for reusable components
   - OpenRouter client
 - Supabase for:
   - PostgreSQL database
@@ -87,6 +89,53 @@
 - Progressive enhancement
 - Mobile-first responsive design
 - Accessibility compliance
+
+## Database Schema
+
+### Core Tables
+
+- `profiles`: User profiles with admin flag
+  - `id`: UUID (linked to auth.users)
+  - `email`: String
+  - `is_admin`: Boolean
+  - `created_at`: Timestamp
+
+- `models`: AI model configurations
+  - `id`: UUID
+  - `name`: String (unique identifier)
+  - `display_name`: String
+  - `provider`: String
+  - `context_length`: Integer
+  - `description`: Text
+  - `created_at`: Timestamp
+  - `updated_at`: Timestamp
+
+- `prompts`: System prompts for AI tools
+  - `id`: UUID
+  - `name`: String (unique identifier)
+  - `display_name`: String
+  - `description`: Text
+  - `content`: Text
+  - `tool_name`: String
+  - `type`: Enum ('system', 'public', 'user')
+  - `user_id`: UUID (nullable)
+  - `created_at`: Timestamp
+  - `updated_at`: Timestamp
+
+- `prompt_injects`: Reusable prompt components
+  - `id`: UUID
+  - `name`: String (unique identifier)
+  - `display_name`: String
+  - `description`: Text
+  - `content`: Text
+  - `created_at`: Timestamp
+  - `updated_at`: Timestamp
+
+- `prompt_inject_links`: Links between prompts and injects
+  - `id`: UUID
+  - `prompt_id`: UUID (foreign key to prompts)
+  - `inject_id`: UUID (foreign key to prompt_injects)
+  - `created_at`: Timestamp
 
 ## Integration Points
 
