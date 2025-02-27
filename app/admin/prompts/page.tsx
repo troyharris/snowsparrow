@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/shared/Card";
 
 export default async function PromptsAdminPage() {
   console.log("Admin Prompts Page: Creating Supabase client");
-  const supabase = await createClient();
+  const supabase = await createClient(true);
   console.log("Admin Prompts Page: Supabase client created");
 
   // Check if user is admin

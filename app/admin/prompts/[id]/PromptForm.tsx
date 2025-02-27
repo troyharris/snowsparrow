@@ -103,7 +103,7 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
           required
         />
         <p className="text-xs text-gray-500 mt-1">
-          Unique identifier used in code (e.g., "mermaid_default")
+          Unique identifier used in code (e.g., $quot;mermaid_default$quot;)
         </p>
       </div>
 
@@ -147,7 +147,8 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
           required
         />
         <p className="text-xs text-gray-500 mt-1">
-          The tool this prompt is for (e.g., "mermaid", "handbook")
+          The tool this prompt is for (e.g., $quot;mermaid$quot;,
+          $quot;handbook$quot;)
         </p>
       </div>
 
@@ -183,7 +184,7 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
         />
         <p className="text-xs text-gray-500 mt-1">
           Path to a file whose content should be injected into the prompt (e.g.,
-          "lib/ai/data/handbook.txt")
+          $quot;lib/ai/data/handbook.txt$quot;)
         </p>
       </div>
 

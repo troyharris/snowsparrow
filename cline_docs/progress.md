@@ -8,6 +8,7 @@
   - Authentication system foundation
   - Implemented middleware to protect all routes
   - Modified authentication flow to redirect to homepage after login/signup
+  - Added role-based access control with admin privileges
 
 # Progress Tracking
 
@@ -54,9 +55,19 @@
     - [x] ErrorMessage component
     - [x] SuccessMessage component
     - [x] ChatInterface component
+    - [x] AdminDropdown component
   - [x] Component documentation
   - [ ] Unit tests
   - [ ] Error boundaries
+
+- User administration
+
+  - [x] Added is_admin flag to profiles table
+  - [x] Created users API endpoint for admin operations
+  - [x] Implemented users administration page
+  - [x] Added role-based access control
+  - [x] Updated row-level security policies for admin access
+  - [ ] User profile management enhancements
 
 - Mermaid flowchart creation tool
 
@@ -94,6 +105,10 @@
   - Saved flowcharts
   - Saved handbook chats
   - User preferences
+- User administration enhancements
+  - User activity tracking
+  - Permission management
+  - User groups and roles
 - Additional AI tools (future)
   - Reuse AI service layer
   - Follow established patterns

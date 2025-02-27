@@ -9,9 +9,16 @@
 - Testing and documentation improvements
 - Modified authentication flow to redirect to homepage after login/signup
 - Database-driven models configuration for AI tools
+- User administration and role-based access control
 
 ## Recent Changes
 
+- Implemented user administration and role-based access control:
+  - Added is_admin flag to profiles table
+  - Created users API endpoint for admin operations
+  - Implemented users administration page
+  - Added AdminDropdown component for admin navigation
+  - Updated row-level security policies for admin access
 - Created AI service layer:
   - Database-driven model configuration in lib/ai/config/models.ts
   - Prompt templates in lib/ai/prompts/mermaid.ts and handbook.ts
@@ -50,6 +57,7 @@
 - Using TypeScript for type safety
 - Following component-based architecture
 - Moving configuration to database for flexibility
+- Implementing role-based access control with admin privileges
 
 ## Current Considerations
 
@@ -63,6 +71,8 @@
 - Performance optimization
 - Database schema design for configuration
 - Admin interface access control
+- Role-based security implementation
+- User management and administration
 
 ### Product
 

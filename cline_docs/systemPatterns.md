@@ -18,14 +18,21 @@ flowchart TD
 
     subgraph Admin[Admin Interface]
         ModelAdmin[Model Management]
+        PromptAdmin[Prompt Management]
+        UserAdmin[User Administration]
     end
 
     Admin --> API
+    Admin --> RBAC[Role-Based Access Control]
+    RBAC --> Profiles[Profiles with is_admin flag]
+    Profiles --> DB
 
     subgraph UI[UI Layer]
         SharedComponents[Shared Components]
         ToolComponents[Tool Components]
+        AdminComponents[Admin Components]
         ToolComponents --> SharedComponents
+        AdminComponents --> SharedComponents
     end
 
     Client --> UI
@@ -40,6 +47,7 @@ flowchart TD
 - Protected routes require valid session
 - Auth state managed through middleware
 - Middleware checks for authentication and redirects to /login if not authenticated
+- Admin routes check for admin privileges through profiles table
 
 ### Data Flow
 
@@ -56,7 +64,9 @@ flowchart TD
   - Card with header and content
   - Form inputs (Select, Textarea)
   - Feedback components (Error, Success, Loading)
+  - Navigation components (NavDropdown, AdminDropdown)
 - Tool-specific components in app/ directory
+- Admin components in app/admin/ directory
 - Utility functions in utils/
 - Type definitions in types/
 
@@ -123,3 +133,8 @@ flowchart TD
   - Selective use of service role for admin operations
   - API routes bypass authentication when needed
   - Protected database tables accessed via service role
+- Role-based access control:
+  - is_admin flag in profiles table
+  - Admin-specific navigation menu
+  - Admin-only API endpoints
+  - Row-level security policies for admin operations

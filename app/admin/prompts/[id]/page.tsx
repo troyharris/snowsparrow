@@ -3,11 +3,13 @@ import { redirect } from "next/navigation";
 import { Card } from "@/components/shared/Card";
 import PromptForm from "./PromptForm";
 
-export default async function EditPromptPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function EditPromptPage({ params }: Props) {
+  const { id } = await params;
   const supabase = await createClient();
 
   // Check if user is admin
@@ -21,11 +23,11 @@ export default async function EditPromptPage({
 
   // Fetch prompt if editing
   let prompt = null;
-  if (params.id !== "new") {
+  if (id !== "new") {
     const { data, error } = await supabase
       .from("prompts")
       .select("*")
-      .eq("id", params.id)
+      .eq("id", id)
       .single();
 
     if (error) {
