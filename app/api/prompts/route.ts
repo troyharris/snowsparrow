@@ -122,7 +122,7 @@ export async function PUT(request: NextRequest) {
 
     const json = await request.json();
     const { id, ...updateData } = json;
-    console.log("Prompts API: Updating prompt:", { id, updateData });
+    console.log("Prompts API: Updating prompt:", { id, updateData: JSON.stringify(updateData) });
 
     if (!id) {
       return NextResponse.json(

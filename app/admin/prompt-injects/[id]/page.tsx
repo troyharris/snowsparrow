@@ -1,14 +1,14 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Card } from "@/components/shared/Card";
-import PromptForm from "./PromptForm";
+import PromptInjectForm from "../PromptInjectForm";
 
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function EditPromptPage({ params }: Props) {
+export default async function EditPromptInjectPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
 
@@ -32,32 +32,32 @@ export default async function EditPromptPage({ params }: Props) {
     redirect("/");
   }
 
-  // Fetch prompt if editing
-  let prompt = null;
+  // Fetch prompt inject if editing
+  let inject = null;
   if (id !== "new") {
     const { data, error } = await supabase
-      .from("prompts")
+      .from("prompt_injects")
       .select("*")
       .eq("id", id)
       .single();
 
     if (error) {
-      console.error("Error fetching prompt:", error);
-      return <div>Error loading prompt</div>;
+      console.error("Error fetching prompt inject:", error);
+      return <div>Error loading prompt inject</div>;
     }
 
-    prompt = data;
+    inject = data;
   }
 
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">
-        {prompt ? "Edit Prompt" : "Add New Prompt"}
+        {inject ? "Edit Prompt Inject" : "Add New Prompt Inject"}
       </h1>
 
       <Card>
         <div className="p-6">
-          <PromptForm prompt={prompt} />
+          <PromptInjectForm inject={inject} />
         </div>
       </Card>
     </div>

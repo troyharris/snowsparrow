@@ -1,6 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import fs from "fs/promises";
-import path from "path";
 
 export interface AIPrompt {
   id: string;
@@ -8,12 +6,28 @@ export interface AIPrompt {
   display_name: string;
   description: string;
   content: string;
-  filepath: string | null;
   tool_name: string;
   type: "system" | "public" | "user";
   user_id: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface PromptInject {
+  id: string;
+  name: string;
+  display_name: string;
+  description: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PromptInjectLink {
+  id: string;
+  prompt_id: string;
+  inject_id: string;
+  created_at: string;
 }
 
 // Cache for prompts to avoid frequent database calls
@@ -134,25 +148,137 @@ export async function getUserPromptsForTool(
   );
 }
 
+// Cache for prompt injects to avoid frequent database calls
+let injectsCache: PromptInject[] | null = null;
+let injectsLastFetchTime = 0;
+
 /**
- * Processes a prompt by injecting file content if filepath is specified
+ * Fetches all prompt injects from the database
+ */
+export async function getAllPromptInjects(): Promise<PromptInject[]> {
+  const now = Date.now();
+
+  // Return cached injects if available and not expired
+  if (injectsCache && now - injectsLastFetchTime < CACHE_TTL) {
+    console.log("Returning cached prompt injects", injectsCache);
+    return injectsCache;
+  }
+
+  try {
+    console.log("Creating Supabase client with service role for injects");
+    const supabase = await createClient(true); // Use service role
+    console.log("Supabase client created with service role for injects");
+
+    try {
+      console.log("Executing query to fetch prompt injects");
+      const { data, error } = await supabase.from("prompt_injects").select("*");
+      console.log("Query executed for injects", {
+        dataLength: data?.length,
+        error,
+      });
+
+      if (error) {
+        console.error("Error fetching prompt injects:", error);
+        console.error("Error details:", JSON.stringify(error, null, 2));
+        throw error;
+      }
+
+      // Update cache
+      injectsCache = data;
+      injectsLastFetchTime = now;
+
+      console.log("Returning prompt injects from database", { count: data?.length });
+      return data;
+    } catch (queryError) {
+      console.error("Query error for injects:", queryError);
+      console.error(
+        "Query error details:",
+        JSON.stringify(queryError, null, 2)
+      );
+      throw queryError;
+    }
+  } catch (error) {
+    console.error("Failed to fetch prompt injects:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
+
+    // Fallback to empty array instead of throwing
+    console.warn("Using empty prompt injects array as fallback");
+    return [];
+  }
+}
+
+/**
+ * Gets prompt injects for a specific prompt
+ */
+export async function getInjectsForPrompt(promptId: string): Promise<PromptInject[]> {
+  try {
+    console.log("Creating Supabase client with service role for prompt injects");
+    const supabase = await createClient(true); // Use service role
+    console.log("Supabase client created with service role for prompt injects");
+
+    // Get the inject IDs linked to this prompt
+    const { data: links, error: linksError } = await supabase
+      .from("prompt_inject_links")
+      .select("inject_id")
+      .eq("prompt_id", promptId);
+
+    if (linksError) {
+      console.error("Error fetching prompt inject links:", linksError);
+      console.error("Error details:", JSON.stringify(linksError, null, 2));
+      throw linksError;
+    }
+
+    if (!links || links.length === 0) {
+      return [];
+    }
+
+    // Get all the injects
+    const injectIds = links.map(link => link.inject_id);
+    const { data: injects, error: injectsError } = await supabase
+      .from("prompt_injects")
+      .select("*")
+      .in("id", injectIds);
+
+    if (injectsError) {
+      console.error("Error fetching prompt injects:", injectsError);
+      console.error("Error details:", JSON.stringify(injectsError, null, 2));
+      throw injectsError;
+    }
+
+    return injects || [];
+  } catch (error) {
+    console.error("Failed to fetch injects for prompt:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
+    return [];
+  }
+}
+
+/**
+ * Processes a prompt by injecting content from linked prompt injects
  */
 export async function processPrompt(prompt: AIPrompt): Promise<string> {
   let content = prompt.content;
 
-  // If filepath is specified, read the file and inject its content
-  if (prompt.filepath) {
-    try {
-      const filePath = path.join(process.cwd(), prompt.filepath);
-      const fileContent = await fs.readFile(filePath, "utf-8");
-      content = content.replace("{{FILE_CONTENT}}", fileContent);
-    } catch (error) {
-      console.error(`Error reading file ${prompt.filepath}:`, error);
-      throw new Error(`Failed to read file: ${prompt.filepath}`);
-    }
+  // Get injects for this prompt
+  const injects = await getInjectsForPrompt(prompt.id);
+  
+  // Process each inject
+  for (const inject of injects) {
+    // Replace the placeholder with the inject content
+    // The placeholder format is {{INJECT:name}}
+    const placeholder = `{{INJECT:${inject.name}}}`;
+    content = content.replace(placeholder, inject.content);
   }
 
   return content;
+}
+
+/**
+ * Invalidates the injects cache
+ */
+export function invalidateInjectsCache(): void {
+  injectsCache = null;
+  injectsLastFetchTime = 0;
 }
 
 /**
