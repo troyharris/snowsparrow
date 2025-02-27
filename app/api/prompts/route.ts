@@ -11,14 +11,18 @@ export async function GET(request: NextRequest) {
     // Get query parameters
     const url = new URL(request.url);
     const toolName = url.searchParams.get("tool_name");
+    const toolId = url.searchParams.get("tool_id");
     const type = url.searchParams.get("type");
-    console.log("Prompts API: Query parameters", { toolName, type });
+    console.log("Prompts API: Query parameters", { toolName, toolId, type });
 
     // Build query
     console.log("Prompts API: Building query");
     let query = supabase.from("prompts").select("*");
 
-    if (toolName) {
+    if (toolId) {
+      query = query.eq("tool_id", toolId);
+    } else if (toolName) {
+      // Fall back to tool_name if tool_id is not provided
       query = query.eq("tool_name", toolName);
     }
 

@@ -14,6 +14,17 @@
 
 ## Recent Changes
 
+- Created database-driven tools table:
+  - Added tools table with name, description, icon, href fields
+  - Populated initial data from hardcoded tools array
+  - Prepared for future integration with homepage, tools dropdown, and prompts
+- Updated UI components to use Google Material Icons:
+  - Replaced SVG icons with Google Material Icons on homepage tool cards
+  - Added AI Chat tool card to the homepage
+  - Updated admin dashboard to use Material Icons
+  - Updated AdminSidebar component to use Material Icons
+  - Updated AdminDropdown component to use Material Icons
+  - Updated NavDropdown component to use Material Icons
 - Implemented user administration and role-based access control:
   - Added is_admin flag to profiles table
   - Created users API endpoint for admin operations

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardHeader, CardContent } from "@/components/shared/Card";
 
 // Tool data array for easy addition of new tools
@@ -8,21 +7,34 @@ const tools = [
     name: "Flowchart Creator",
     description:
       "Transform text descriptions into professional flowcharts instantly. Perfect for documenting processes and procedures.",
-    icon: "/file.svg",
+    icon: "account_tree",
     href: "/mermaid",
   },
   {
     name: "Employee Handbook Chat",
     description:
       "Chat with an AI assistant about employee handbook questions and get instant answers.",
-    icon: "/globe.svg",
+    icon: "menu_book",
     href: "/handbook",
+  },
+  {
+    name: "AI Chat",
+    description:
+      "Chat with AI models using different prompts. Select a model and prompt to customize your experience.",
+    icon: "chat",
+    href: "/chat",
   },
 ];
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
+      {/* Add Google Material Icons */}
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+      />
+      
       {/* Tools Grid Section */}
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-3xl font-bold tracking-tight text-foreground mb-8">
@@ -35,13 +47,12 @@ export default function Home() {
                 <CardHeader title={tool.name} description={tool.description} />
                 <CardContent className="mt-4">
                   <div className="flex justify-center">
-                    <Image
-                      src={tool.icon}
-                      alt={`${tool.name} icon`}
-                      width={48}
-                      height={48}
-                      className="opacity-80 group-hover:opacity-100 transition-opacity"
-                    />
+                    <span 
+                      className="material-icons text-5xl opacity-80 group-hover:opacity-100 transition-opacity"
+                      aria-hidden="true"
+                    >
+                      {tool.icon}
+                    </span>
                   </div>
                 </CardContent>
               </Card>

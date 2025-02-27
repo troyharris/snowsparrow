@@ -14,22 +14,22 @@ const adminNavItems: AdminNavItem[] = [
   {
     name: "Models",
     href: "/admin/models",
-    icon: "/window.svg",
+    icon: "model_training",
   },
   {
     name: "Prompts",
     href: "/admin/prompts",
-    icon: "/file.svg",
+    icon: "description",
   },
   {
     name: "Prompt Injects",
     href: "/admin/prompt-injects",
-    icon: "/file.svg",
+    icon: "integration_instructions",
   },
   {
     name: "Users",
     href: "/admin/users",
-    icon: "/globe.svg",
+    icon: "people",
   },
 ];
 
@@ -43,6 +43,11 @@ export default function AdminSidebar() {
         collapsed ? "w-16" : "w-64"
       }`}
     >
+      {/* Add Google Material Icons */}
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+      />
       <div className="flex justify-between items-center p-4 border-b">
         {!collapsed && <h2 className="font-semibold text-lg">Admin Panel</h2>}
         <button
@@ -81,7 +86,12 @@ export default function AdminSidebar() {
                     : "hover:bg-gray-100"
                 }`}
               >
-                <img src={item.icon} alt="" className="w-5 h-5 mr-3" />
+                <span 
+                  className="material-icons text-xl mr-3"
+                  aria-hidden="true"
+                >
+                  {item.icon}
+                </span>
                 {!collapsed && <span>{item.name}</span>}
               </Link>
             </li>

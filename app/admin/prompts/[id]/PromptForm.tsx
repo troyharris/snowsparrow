@@ -7,8 +7,21 @@ import { Button } from "@/components/shared/Button";
 import { Textarea } from "@/components/shared/Textarea";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { SuccessMessage } from "@/components/shared/SuccessMessage";
+import { Select } from "@/components/shared/Select";
 
 import { PromptInject } from "@/lib/ai/config/prompts";
+
+interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  href: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 interface Prompt {
   id: string;
@@ -17,6 +30,7 @@ interface Prompt {
   description: string;
   content: string;
   tool_name: string;
+  tool_id: string | null;
   type: "system" | "public" | "user";
 }
 
@@ -44,6 +58,7 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
       description: "",
       content: "",
       tool_name: "",
+      tool_id: null,
       type: "system",
       injects: [],
       selectedInjectIds: []
@@ -54,6 +69,30 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
   const [isLoadingInjects, setIsLoadingInjects] = useState(false);
   const [linkedInjects, setLinkedInjects] = useState<PromptInject[]>([]);
   const [isLoadingLinkedInjects, setIsLoadingLinkedInjects] = useState(false);
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [isLoadingTools, setIsLoadingTools] = useState(false);
+  
+  // Fetch all available tools
+  useEffect(() => {
+    const fetchTools = async () => {
+      setIsLoadingTools(true);
+      try {
+        const response = await fetch('/api/tools');
+        if (!response.ok) {
+          throw new Error('Failed to fetch tools');
+        }
+        const data = await response.json();
+        setTools(data.tools || []);
+      } catch (err) {
+        console.error('Error fetching tools:', err);
+        setError((err as Error).message);
+      } finally {
+        setIsLoadingTools(false);
+      }
+    };
+    
+    fetchTools();
+  }, []);
   
   // Fetch all available injects
   useEffect(() => {
@@ -180,6 +219,7 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
         description: formData.description,
         content: formData.content,
         tool_name: formData.tool_name,
+        tool_id: formData.tool_id,
         type: formData.type
       };
 
@@ -265,18 +305,50 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">Tool Name</label>
+        <label className="block text-sm font-medium mb-1">Tool</label>
+        {isLoadingTools ? (
+          <p className="text-sm text-gray-500">Loading tools...</p>
+        ) : (
+          <select
+            name="tool_id"
+            value={formData.tool_id || ""}
+            onChange={(e) => {
+              const selectedTool = tools.find(tool => tool.id === e.target.value);
+              setFormData(prev => ({
+                ...prev,
+                tool_id: e.target.value,
+                // Set tool_name for backward compatibility
+                tool_name: selectedTool ? selectedTool.name : prev.tool_name
+              }));
+            }}
+            className="w-full p-2 border rounded"
+            required
+          >
+            <option value="">Select a tool</option>
+            {tools.map(tool => (
+              <option key={tool.id} value={tool.id}>
+                {tool.name} - {tool.description}
+              </option>
+            ))}
+          </select>
+        )}
+        <p className="text-xs text-gray-500 mt-1">
+          The tool this prompt is associated with
+        </p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Tool Name (Legacy)</label>
         <input
           type="text"
           name="tool_name"
           value={formData.tool_name || ""}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-gray-50"
           required
         />
         <p className="text-xs text-gray-500 mt-1">
-          The tool this prompt is for (e.g., $quot;mermaid$quot;,
-          $quot;handbook$quot;)
+          Legacy field - will be auto-populated when selecting a tool above
         </p>
       </div>
 

@@ -7,6 +7,7 @@ export interface AIPrompt {
   description: string;
   content: string;
   tool_name: string;
+  tool_id: string | null;
   type: "system" | "public" | "user";
   user_id: string | null;
   created_at: string;
@@ -103,20 +104,33 @@ export async function getPromptByName(
 /**
  * Gets prompts for a specific tool
  */
-export async function getPromptsForTool(toolName: string): Promise<AIPrompt[]> {
+export async function getPromptsForTool(toolIdentifier: string): Promise<AIPrompt[]> {
   const prompts = await getAllPrompts();
-  return prompts.filter((prompt) => prompt.tool_name === toolName);
+  return prompts.filter((prompt) => 
+    // Support both tool_id and tool_name for backward compatibility
+    prompt.tool_id === toolIdentifier || prompt.tool_name === toolIdentifier
+  );
+}
+
+/**
+ * Gets prompts for a specific tool by ID
+ */
+export async function getPromptsByToolId(toolId: string): Promise<AIPrompt[]> {
+  const prompts = await getAllPrompts();
+  return prompts.filter((prompt) => prompt.tool_id === toolId);
 }
 
 /**
  * Gets system prompts for a specific tool
  */
 export async function getSystemPromptsForTool(
-  toolName: string
+  toolIdentifier: string
 ): Promise<AIPrompt[]> {
   const prompts = await getAllPrompts();
   return prompts.filter(
-    (prompt) => prompt.tool_name === toolName && prompt.type === "system"
+    (prompt) => 
+      (prompt.tool_id === toolIdentifier || prompt.tool_name === toolIdentifier) && 
+      prompt.type === "system"
   );
 }
 
@@ -124,11 +138,13 @@ export async function getSystemPromptsForTool(
  * Gets public prompts for a specific tool
  */
 export async function getPublicPromptsForTool(
-  toolName: string
+  toolIdentifier: string
 ): Promise<AIPrompt[]> {
   const prompts = await getAllPrompts();
   return prompts.filter(
-    (prompt) => prompt.tool_name === toolName && prompt.type === "public"
+    (prompt) => 
+      (prompt.tool_id === toolIdentifier || prompt.tool_name === toolIdentifier) && 
+      prompt.type === "public"
   );
 }
 
@@ -136,13 +152,13 @@ export async function getPublicPromptsForTool(
  * Gets user prompts for a specific tool and user
  */
 export async function getUserPromptsForTool(
-  toolName: string,
+  toolIdentifier: string,
   userId: string
 ): Promise<AIPrompt[]> {
   const prompts = await getAllPrompts();
   return prompts.filter(
     (prompt) =>
-      prompt.tool_name === toolName &&
+      (prompt.tool_id === toolIdentifier || prompt.tool_name === toolIdentifier) &&
       prompt.type === "user" &&
       prompt.user_id === userId
   );

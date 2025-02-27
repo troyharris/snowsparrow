@@ -15,6 +15,7 @@ flowchart TD
     Supabase --> DB[(Database)]
     Supabase --> Storage[(File Storage)]
     Models --> DB
+    Tools[Tools Config] --> DB
     
     subgraph PromptSystem
         Prompts[Prompts]

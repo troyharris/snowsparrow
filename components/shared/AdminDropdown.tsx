@@ -8,7 +8,7 @@ const adminPages = [
   {
     name: "Admin Dashboard",
     href: "/admin",
-    icon: "/window.svg",
+    icon: "dashboard",
   },
 ];
 
@@ -16,6 +16,18 @@ export default function AdminDropdown() {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  // Add Google Material Icons
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   useEffect(() => {
     async function checkAdminStatus() {
@@ -98,11 +110,12 @@ export default function AdminDropdown() {
                         : "text-gray-700"
                     } group flex items-center px-4 py-2 text-sm gap-3`}
                   >
-                    <img
-                      src={page.icon}
-                      alt=""
-                      className="w-5 h-5 text-gray-500"
-                    />
+                    <span 
+                      className="material-icons text-xl text-gray-500"
+                      aria-hidden="true"
+                    >
+                      {page.icon}
+                    </span>
                     {page.name}
                   </Link>
                 )}

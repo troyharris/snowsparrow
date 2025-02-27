@@ -1,5 +1,5 @@
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -7,22 +7,34 @@ const tools = [
   {
     name: "Mermaid Flowchart",
     href: "/mermaid",
-    icon: "/file.svg",
+    icon: "description",
   },
   {
     name: "Employee Handbook",
     href: "/handbook",
-    icon: "/globe.svg",
+    icon: "menu_book",
   },
   {
     name: "AI Chat",
     href: "/chat",
-    icon: "/window.svg",
+    icon: "chat",
   },
 ];
 
 export default function NavDropdown() {
   const pathname = usePathname();
+  
+  // Add Google Material Icons
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -64,11 +76,12 @@ export default function NavDropdown() {
                         : "text-gray-700"
                     } group flex items-center px-4 py-2 text-sm gap-3`}
                   >
-                    <img
-                      src={tool.icon}
-                      alt=""
-                      className="w-5 h-5 text-gray-500"
-                    />
+                    <span 
+                      className="material-icons text-xl text-gray-500"
+                      aria-hidden="true"
+                    >
+                      {tool.icon}
+                    </span>
                     {tool.name}
                   </Link>
                 )}

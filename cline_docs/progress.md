@@ -39,6 +39,8 @@
 
 - Code organization and architecture
 
+  - [x] Database-driven configuration
+    - [x] Tools table for homepage and navigation
   - [x] AI service layer implementation
     - [x] Model configuration
       - [x] Database-driven models
@@ -52,6 +54,13 @@
       - [x] Prompt inject linking system
     - [x] Prompt templates
     - [x] OpenRouter client
+  - [x] UI improvements
+    - [x] Replaced SVG icons with Google Material Icons on homepage
+    - [x] Added AI Chat tool card to homepage
+    - [x] Updated admin dashboard to use Material Icons
+    - [x] Updated AdminSidebar component to use Material Icons
+    - [x] Updated AdminDropdown component to use Material Icons
+    - [x] Updated NavDropdown component to use Material Icons
   - [x] Shared UI components
     - [x] Button component
     - [x] Card components

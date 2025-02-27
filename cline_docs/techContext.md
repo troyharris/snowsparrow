@@ -94,6 +94,17 @@
 
 ### Core Tables
 
+- `tools`: Application tools configuration
+  - `id`: UUID
+  - `name`: String
+  - `description`: Text
+  - `icon`: String (Material Icon name)
+  - `href`: String (URL path)
+  - `sort_order`: Integer
+  - `is_active`: Boolean
+  - `created_at`: Timestamp
+  - `updated_at`: Timestamp
+
 - `profiles`: User profiles with admin flag
   - `id`: UUID (linked to auth.users)
   - `email`: String
