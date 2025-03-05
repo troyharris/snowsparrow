@@ -2,17 +2,26 @@
 
 ## Current Focus
 
+- Implementing chat system with conversation persistence
+- Enhancing shared ChatInterface component functionality
+- Expanding admin interface for chat management
 - Implementing storage integration for Mermaid flowcharts
-- Expanding AI tools with Employee Handbook feature
 - Refining shared component architecture
 - Enhancing error handling and validation
 - Testing and documentation improvements
-- Modified authentication flow to redirect to homepage after login/signup
 - Database-driven models and prompts configuration for AI tools
 - User administration and role-based access control
 - Prompt management system with reusable prompt components (injects)
+- Planning and implementing a global saved items interface for user content
 
 ## Recent Changes
+
+- Implemented chat system:
+  - Added conversations API endpoint
+  - Enhanced ChatInterface component with conversation support
+  - Created chat page with persistent conversations
+  - Added chat tool to homepage
+  - Prepared for conversation history feature
 
 - Created database-driven tools table:
   - Added tools table with name, description, icon, href fields
@@ -73,11 +82,14 @@
 - Moving configuration to database for flexibility
 - Implementing role-based access control with admin privileges
 - Using modular prompt architecture with reusable prompt components (injects)
+- Using a centralized global saved items page rather than tool-specific interfaces
 
 ## Current Considerations
 
 ### Technical
 
+- Chat system architecture and persistence
+- Conversation history implementation
 - Storage access policies configuration
 - Testing implementation strategy
 - Component reusability and composition
@@ -90,6 +102,8 @@
 - User management and administration
 - Prompt caching and performance optimization
 - Prompt composition and reuse patterns
+- Unified interface for accessing saved content across different tools
+- Consistent user experience for managing saved items
 
 ### Product
 
@@ -102,13 +116,24 @@
 
 ## Next Steps
 
-1. Complete storage integration:
+1. Complete chat system implementation:
+   - Finish conversation persistence
+   - Add user preferences for chat
+   - Implement chat history viewing
+   - Add conversation management features
 
+2. Complete storage integration:
    - Set up storage access policies
    - Test storage functionality
    - Document storage integration
 
-2. Enhance database-driven prompt system:
+3. Implement global saved items interface:
+   - Create saved-items page with filtering by tool type
+   - Develop API endpoints for retrieving saved content
+   - Design UI components for different content types
+   - Implement search and filtering functionality
+
+4. Enhance database-driven prompt system:
 
    - Improve prompt inject linking interface
    - Add versioning for prompts and models

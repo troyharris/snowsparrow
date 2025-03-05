@@ -5,6 +5,7 @@ import { Button } from "./Button";
 import { Textarea } from "./Textarea";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { ErrorMessage } from "./ErrorMessage";
+import { SuccessMessage } from "./SuccessMessage";
 import { Card, CardContent, CardHeader } from "./Card";
 import { Select } from "./Select";
 
@@ -37,6 +38,10 @@ interface ChatInterfaceProps {
   showModelSelector?: boolean;
   showPromptSelector?: boolean;
   toolName?: string;
+  enableSave?: boolean;
+  initialMessages?: Message[];
+  initialModelId?: string;
+  initialPromptId?: string;
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -48,8 +53,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   showModelSelector = false,
   showPromptSelector = false,
   toolName = "chat",
+  enableSave = false,
+  initialMessages = [],
+  initialModelId,
+  initialPromptId,
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,12 +67,19 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   // Model and prompt selection state
   const [models, setModels] = useState<Model[]>([]);
   const [prompts, setPrompts] = useState<Prompt[]>([]);
-  const [selectedModelId, setSelectedModelId] = useState<string>("");
-  const [selectedPromptId, setSelectedPromptId] = useState<string>("");
+  const [selectedModelId, setSelectedModelId] = useState<string>(initialModelId || "");
+  const [selectedPromptId, setSelectedPromptId] = useState<string>(initialPromptId || "");
   const [isLoadingModels, setIsLoadingModels] = useState(false);
   const [isLoadingPrompts, setIsLoadingPrompts] = useState(false);
   const [modelError, setModelError] = useState<string | null>(null);
   const [promptError, setPromptError] = useState<string | null>(null);
+  
+  // Save conversation state
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [conversationTitle, setConversationTitle] = useState<string>("");
+  const [showTitleInput, setShowTitleInput] = useState(false);
   
   // Fetch available models
   const fetchModels = useCallback(async () => {
@@ -150,20 +166,17 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       // Prepare request body based on available selections
       interface RequestBody {
         message: string;
+        history?: Message[];
         modelId?: string;
         promptId?: string;
       }
       
-      const requestBody: RequestBody = { message: userMessage };
-      
-      // Add model and prompt IDs if they're selected
-      if (showModelSelector && selectedModelId) {
-        requestBody.modelId = selectedModelId;
-      }
-      
-      if (showPromptSelector && selectedPromptId) {
-        requestBody.promptId = selectedPromptId;
-      }
+      const requestBody: RequestBody = {
+        message: userMessage,
+        history: messages.length > 0 ? messages : undefined,
+        modelId: showModelSelector && selectedModelId ? selectedModelId : undefined,
+        promptId: showPromptSelector && selectedPromptId ? selectedPromptId : undefined
+      };
       
       const response = await fetch(apiEndpoint, {
         method: "POST",
@@ -282,6 +295,98 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <p className="text-sm mt-2">
                   Type a message to start the conversation
                 </p>
+              </div>
+            )}
+
+            {/* Save conversation UI */}
+            {enableSave && messages.length > 0 && (
+              <div className="flex flex-col space-y-2">
+                {showTitleInput ? (
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={conversationTitle}
+                      onChange={(e) => setConversationTitle(e.target.value)}
+                      placeholder="Enter conversation title"
+                      className="flex-1 px-3 py-2 border rounded-md text-sm"
+                      disabled={isSaving}
+                    />
+                    <Button 
+                      onClick={async () => {
+                        setIsSaving(true);
+                        setSaveError(null);
+                        setSaveSuccess(false);
+                        
+                        try {
+                          const response = await fetch('/api/conversations', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              title: conversationTitle || "Untitled Conversation",
+                              messages,
+                              toolName,
+                              modelId: selectedModelId || undefined,
+                              promptId: selectedPromptId || undefined
+                            }),
+                          });
+                          
+                          const data = await response.json();
+                          
+                          if (!response.ok) {
+                            throw new Error(data.error || "Failed to save conversation");
+                          }
+                          
+                          setSaveSuccess(true);
+                          setConversationTitle("");
+                          setShowTitleInput(false);
+                          
+                          setTimeout(() => {
+                            setSaveSuccess(false);
+                          }, 3000);
+                        } catch (err) {
+                          setSaveError(err instanceof Error ? err.message : "Failed to save conversation");
+                        } finally {
+                          setIsSaving(false);
+                        }
+                      }}
+                      disabled={isSaving}
+                      className="whitespace-nowrap"
+                    >
+                      {isSaving ? <LoadingSpinner text="Saving..." /> : "Save"}
+                    </Button>
+                    <Button 
+                      onClick={() => setShowTitleInput(false)}
+                      disabled={isSaving}
+                      variant="outline"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex justify-end">
+                    <Button 
+                      onClick={() => {
+                        setShowTitleInput(true);
+                        // Generate a default title from the first message if available
+                        if (!conversationTitle && messages.length > 0) {
+                          setConversationTitle(
+                            messages[0].content.substring(0, 50) + (messages[0].content.length > 50 ? "..." : "")
+                          );
+                        }
+                      }}
+                      disabled={isSaving}
+                      variant="outline"
+                      className="flex items-center space-x-1"
+                    >
+                      <span>Save Conversation</span>
+                    </Button>
+                  </div>
+                )}
+                
+                {saveError && <ErrorMessage message={saveError} />}
+                {saveSuccess && <SuccessMessage message="Conversation saved successfully!" />}
               </div>
             )}
 

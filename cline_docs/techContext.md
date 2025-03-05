@@ -94,6 +94,20 @@
 
 ### Core Tables
 
+- `conversations`: Chat conversations
+  - `id`: UUID
+  - `user_id`: UUID (foreign key to auth.users)
+  - `title`: String
+  - `created_at`: Timestamp
+  - `updated_at`: Timestamp
+
+- `messages`: Chat messages
+  - `id`: UUID
+  - `conversation_id`: UUID (foreign key to conversations)
+  - `role`: String ('user' or 'assistant')
+  - `content`: Text
+  - `created_at`: Timestamp
+
 - `tools`: Application tools configuration
   - `id`: UUID
   - `name`: String
@@ -153,6 +167,7 @@
 ### Supabase
 
 - Authentication system
+- Chat history persistence
 - Database operations
   - Row-level security policies
   - Service role access for admin operations
@@ -163,6 +178,7 @@
 ### AI Services
 
 - OpenRouter integration
+- Chat system integration
 - Model configuration
 - Prompt templates
 - Error handling

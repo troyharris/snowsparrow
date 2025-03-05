@@ -6,8 +6,9 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    const { message, modelId, promptId } = await request.json();
+    const { message, history, modelId, promptId } = await request.json();
     console.log("Chat API received message:", message);
+    console.log("Chat API received history:", history);
     console.log("Chat API received modelId:", modelId);
     console.log("Chat API received promptId:", promptId);
 
@@ -93,25 +94,34 @@ export async function POST(request: Request) {
     }
 
     // Format messages for OpenRouter
-    const messages = [
+    // Always start with the system message
+    const formattedMessages = [
       {
         role: "system",
         content: promptContent,
-      },
-      {
-        role: "user",
-        content: message,
-      },
+      }
     ];
 
-    console.log("Formatted messages:", JSON.stringify(messages, null, 2));
+    // Add message history if provided
+    if (history && Array.isArray(history)) {
+      // Add all previous messages from history
+      formattedMessages.push(...history);
+    }
+
+    // Add the current user message
+    formattedMessages.push({
+      role: "user",
+      content: message,
+    });
+
+    console.log("Formatted messages:", JSON.stringify(formattedMessages, null, 2));
 
     try {
       // Generate the response
       console.log("Generating response with OpenRouter");
       const aiResponse = await openRouterClient.generateText(
         model,
-        messages
+        formattedMessages
       );
       console.log("Response generated successfully");
 

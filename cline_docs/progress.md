@@ -37,6 +37,15 @@
 
 ## In Progress
 
+- Chat system implementation
+  - [x] Added conversations API endpoint
+  - [x] Enhanced ChatInterface with conversation support
+  - [x] Created chat page with persistent conversations
+  - [x] Added chat tool to homepage
+  - [ ] Implement conversation history viewing
+  - [ ] Add conversation management features
+  - [ ] Add user preferences for chat
+
 - Code organization and architecture
 
   - [x] Database-driven configuration
@@ -115,10 +124,22 @@
 
 ## Planned Features
 
+- Global saved items interface
+  - Centralized page for all saved user content
+  - Filtering by tool type (flowcharts, conversations, etc.)
+  - Search functionality
+  - Preview cards for different content types
+  - Management features (rename, delete, organize)
+  - Consistent UI for all saved content types
+
+- Chat system enhancements
+  - Conversation history browser
+  - Chat preferences
+  - Multiple conversation support
+  - Chat export functionality
+  
 - User dashboard
   - Activity history
-  - Saved flowcharts
-  - Saved handbook chats
   - User preferences
 - User administration enhancements
   - User activity tracking
@@ -139,6 +160,7 @@
 
 ## Known Issues
 
+- Chat history persistence not fully implemented
 - Storage access policies need to be set up in Supabase Dashboard
 - Unit tests needed for components and services
 - Error boundaries not yet implemented
@@ -149,6 +171,8 @@
 
 - Component unit tests needed:
   - Shared UI components
+  - ChatInterface component
+  - Conversations API
   - AI service layer
   - API routes
   - ChatInterface component
@@ -181,35 +205,39 @@
 
 ## Next Milestone
 
-1. Testing Implementation
+1. Saved Items Interface Implementation
+   - Design database queries for retrieving saved content
+   - Create API endpoints for saved items
+   - Develop UI components for the saved items page
+   - Implement filtering and search functionality
+   - Add content type-specific preview components
+   - Test with different saved content types
 
+2. Testing Implementation
    - Set up testing framework
    - Write component tests
    - Write service tests
    - Write API route tests
    - Implement error boundaries
 
-2. Documentation
-
+3. Documentation
    - Complete API documentation
    - Write user guide
    - Add testing documentation
    - Document best practices
 
-3. Storage Integration
-
+4. Storage Integration
    - Set up storage access policies
    - Test storage functionality
    - Document storage integration
 
-4. Chat History Implementation
-
+5. Chat History Implementation
    - Design database schema
    - Implement save functionality
    - Add user preferences
    - Test persistence
 
-5. Deployment
+6. Deployment
    - Environment setup
    - Production deployment
    - Monitoring configuration

@@ -19,6 +19,11 @@ const tools = [
     href: "/chat",
     icon: "chat",
   },
+  {
+    name: "Saved Items",
+    href: "/saved-items",
+    icon: "folder",
+  },
 ];
 
 export default function NavDropdown() {
