@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChatInterface } from "@/components/shared";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
@@ -19,7 +19,7 @@ interface Conversation {
   messages: Message[];
 }
 
-export default function ChatPage() {
+function ChatContent() {
   const searchParams = useSearchParams();
   const conversationId = searchParams.get("id");
   
@@ -102,5 +102,17 @@ export default function ChatPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8 flex items-center justify-center">
+        <LoadingSpinner text="Loading..." />
+      </div>
+    }>
+      <ChatContent />
+    </Suspense>
   );
 }

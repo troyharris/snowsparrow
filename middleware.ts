@@ -2,17 +2,22 @@ import { type NextRequest, NextResponse } from "next/server";
 import { updateSession, isAuthenticated } from "./utils/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  console.log('Middleware processing:', request.nextUrl.pathname);
+  
   // update user's auth session
   const res = await updateSession(request);
 
-  // Allow API routes to bypass authentication
-  if (request.nextUrl.pathname.startsWith("/api/")) {
+  // Allow API routes and auth callback to bypass authentication
+  if (request.nextUrl.pathname.startsWith("/api/") || request.nextUrl.pathname.startsWith("/auth/callback")) {
+    console.log('Bypassing auth check for:', request.nextUrl.pathname);
     return res;
   }
 
   const authenticated = await isAuthenticated(request);
+  console.log('Auth check result:', authenticated, 'for path:', request.nextUrl.pathname);
 
   if (!authenticated && request.nextUrl.pathname !== "/login") {
+    console.log('Redirecting to login from:', request.nextUrl.pathname);
     const redirectUrl = new URL(`/login`, request.url);
     return NextResponse.redirect(redirectUrl);
   }

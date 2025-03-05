@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
+interface ConversationMessage {
+  role: string;
+  content: string;
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -111,7 +116,7 @@ export async function POST(request: Request) {
     }
     
     // Save all messages with order
-    const messagesToInsert = messages.map((msg: any, index: number) => ({
+    const messagesToInsert = messages.map((msg: ConversationMessage, index: number) => ({
       conversation_id: conversation.id,
       role: msg.role,
       content: msg.content,

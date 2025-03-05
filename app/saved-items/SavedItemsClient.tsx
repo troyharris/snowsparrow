@@ -26,27 +26,27 @@ export default function SavedItemsClient() {
   const [selectedType, setSelectedType] = useState('all')
 
   useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const response = await fetch(
+          `/api/saved-items?type=${selectedType}&search=${encodeURIComponent(searchTerm)}`
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch saved items')
+        }
+        const data = await response.json()
+        setItems(data.items)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchItems()
   }, [searchTerm, selectedType])
-
-  const fetchItems = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const response = await fetch(
-        `/api/saved-items?type=${selectedType}&search=${encodeURIComponent(searchTerm)}`
-      )
-      if (!response.ok) {
-        throw new Error('Failed to fetch saved items')
-      }
-      const data = await response.json()
-      setItems(data.items)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleDelete = async (id: string, type: 'conversation' | 'flowchart') => {
     try {

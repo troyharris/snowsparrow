@@ -17,6 +17,18 @@ flowchart TD
     Models --> DB
     Tools[Tools Config] --> DB
     
+    subgraph AuthSystem[Authentication System]
+        LoginPage[Login Page]
+        GoogleOneTap[Google One Tap]
+        AuthCallback[Auth Callback]
+        Session[Session Management]
+        
+        LoginPage --> GoogleOneTap
+        GoogleOneTap --> AuthCallback
+        AuthCallback --> Session
+        Session --> DB
+    end
+    
     subgraph ChatSystem[Chat System]
         ChatInterface[Chat Interface]
         ConversationsAPI[Conversations API]
@@ -68,17 +80,55 @@ flowchart TD
     Client --> UI
     Client --> Admin
     Client --> ChatSystem
+    Client --> AuthSystem
 ```
 
 ## Core Technical Patterns
 
 ### Authentication Flow
 
-- Supabase handles user authentication
+- Multiple authentication methods:
+  - Email/password authentication
+  - Google One Tap authentication
+  - Traditional Google OAuth flow
 - Protected routes require valid session
 - Auth state managed through middleware
 - Middleware checks for authentication and redirects to /login if not authenticated
 - Admin routes check for admin privileges through profiles table
+
+#### Google One Tap Implementation
+
+```mermaid
+flowchart TD
+    A[User Visits Login Page] --> B[Google One Tap UI Appears]
+    B --> C[User Clicks One Tap]
+    C --> D[Google Returns ID Token]
+    D --> E[Send Token to Supabase]
+    E --> F[Exchange Code for Session]
+    F --> G[Save Session Cookies]
+    G --> H[Redirect to Homepage]
+
+    subgraph Security
+        N1[Nonce Generation]
+        N2[Token Validation]
+        N3[CSRF Protection]
+        N1 --> N2 --> N3
+    end
+
+    subgraph Fallback
+        F1[Traditional Google Sign In]
+        F2[Email/Password Auth]
+        F1 --> E
+        F2 --> G
+    end
+```
+
+- Nonce-based security for Google One Tap
+- FedCM support for Chrome's third-party cookie phase-out
+- Automatic session refresh
+- Secure cookie handling
+- Multiple sign-in options
+- Seamless authentication experience
 
 ### Data Flow
 
@@ -91,6 +141,12 @@ flowchart TD
 7. User preferences applied to interactions
 
 ### Component Architecture
+
+- Authentication Components
+  - GoogleOneTap: Handles Google One Tap UI and auth flow
+  - Traditional sign-in options
+  - Auth callback handling
+  - Session management
 
 - Chat System Components
   - ChatInterface: Reusable chat component
@@ -157,6 +213,7 @@ flowchart TD
 - Client components for interactive features
 - Supabase real-time updates where needed
 - Chat state persistence
+- Authentication state management
 
 ### Error Handling
 
@@ -164,6 +221,7 @@ flowchart TD
 - Consistent error boundary implementation
 - User-friendly error messages
 - Chat-specific error states
+- Authentication error handling
 
 ## Design Patterns
 
@@ -174,6 +232,7 @@ flowchart TD
 - Progressive enhancement
 - Accessibility-first approach
 - Chat interface conventions
+- Authentication UI patterns
 
 ### Code Organization
 
@@ -216,3 +275,9 @@ flowchart TD
   - Message sanitization
   - Access control
   - Data privacy
+- Authentication security:
+  - Nonce-based token validation
+  - CSRF protection
+  - Secure session management
+  - Cookie security
+  - FedCM support
