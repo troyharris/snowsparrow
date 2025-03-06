@@ -75,69 +75,73 @@ function LoginContent() {
           Sign in with Google
         </button>
 
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-background text-muted-foreground">
-              Or continue with email
-            </span>
-          </div>
-        </div>
+        {process.env.NEXT_PUBLIC_ENABLE_PASSWORD_AUTH === 'true' && (
+          <>
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-background text-muted-foreground">
+                  Or continue with email
+                </span>
+              </div>
+            </div>
 
-        <form className="flex flex-col gap-4">
-          <div className="space-y-1">
-            <label
-              className="block text-sm font-medium text-foreground"
-              htmlFor="email"
-            >
-              Email address
-            </label>
-            <input
-              className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="you@school.edu"
-            />
-          </div>
+            <form className="flex flex-col gap-4">
+              <div className="space-y-1">
+                <label
+                  className="block text-sm font-medium text-foreground"
+                  htmlFor="email"
+                >
+                  Email address
+                </label>
+                <input
+                  className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="you@school.edu"
+                />
+              </div>
 
-          <div className="space-y-1">
-            <label
-              className="block text-sm font-medium text-foreground"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              placeholder="••••••••"
-            />
-          </div>
+              <div className="space-y-1">
+                <label
+                  className="block text-sm font-medium text-foreground"
+                  htmlFor="password"
+                >
+                  Password
+                </label>
+                <input
+                  className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  placeholder="••••••••"
+                />
+              </div>
 
-          <div className="flex flex-col gap-3 mt-2">
-            <button
-              className="bg-accent hover:bg-accent-hover text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 focus:ring-2 focus:ring-ring"
-              formAction={login}
-            >
-              Sign in
-            </button>
-            <button
-              className="bg-accent hover:bg-border text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 focus:ring-2 focus:ring-ring"
-              formAction={signup}
-            >
-              Create account
-            </button>
-          </div>
-        </form>
+              <div className="flex flex-col gap-3 mt-2">
+                <button
+                  className="bg-accent hover:bg-accent-hover text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 focus:ring-2 focus:ring-ring"
+                  formAction={login}
+                >
+                  Sign in
+                </button>
+                <button
+                  className="bg-accent hover:bg-border text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 focus:ring-2 focus:ring-ring"
+                  formAction={signup}
+                >
+                  Create account
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   )
