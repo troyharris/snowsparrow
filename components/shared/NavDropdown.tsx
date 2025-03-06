@@ -5,9 +5,14 @@ import { usePathname } from "next/navigation";
 
 const tools = [
   {
-    name: "Mermaid Flowchart",
-    href: "/mermaid",
+    name: "Business Continuity Plan",
+    href: "/bcp",
     icon: "description",
+  },
+  {
+    name: "Flowchart Creator",
+    href: "/mermaid",
+    icon: "account_tree",
   },
   {
     name: "Employee Handbook",

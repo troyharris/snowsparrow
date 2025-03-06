@@ -4,6 +4,13 @@ import { Card, CardHeader, CardContent } from "@/components/shared/Card";
 // Tool data array for easy addition of new tools
 const tools = [
   {
+    name: "Business Continuity Plan Creator",
+    description:
+      "Create a comprehensive business continuity plan by answering a series of questions. The AI will guide you through the process.",
+    icon: "description",
+    href: "/bcp",
+  },
+  {
     name: "Flowchart Creator",
     description:
       "Transform text descriptions into professional flowcharts instantly. Perfect for documenting processes and procedures.",
