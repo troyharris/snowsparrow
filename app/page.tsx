@@ -30,18 +30,12 @@ export default async function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {tools.map((tool) => (
             <Link key={tool.name} href={tool.href} className="block group">
-              <Card className="h-full transition-transform hover:scale-[1.02]">
-                <CardHeader title={tool.name} description={tool.description} />
-                <CardContent className="mt-4">
-                  <div className="flex justify-center">
-                    <span 
-                      className="material-icons text-5xl opacity-80 group-hover:opacity-100 transition-opacity"
-                      aria-hidden="true"
-                    >
-                      {tool.icon}
-                    </span>
-                  </div>
-                </CardContent>
+              <Card className="h-full">
+                <CardHeader 
+                  title={tool.name} 
+                  description={tool.description}
+                  icon={tool.icon}
+                />
               </Card>
             </Link>
           ))}
@@ -55,9 +49,10 @@ export default async function Home() {
             <CardHeader
               title="Important AI Usage Guidelines"
               description="Please review these important guidelines for using AI tools in our district."
+              icon="info"
             />
             <CardContent>
-              <div className="space-y-4 text-muted">
+              <div className="space-y-3 text-muted">
                 <p>
                   • Do not share sensitive data or personally identifiable
                   information about students or staff.
