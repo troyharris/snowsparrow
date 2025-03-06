@@ -2,20 +2,26 @@
 
 ## Current Focus
 
-- Implementing chat system with conversation persistence
+- Implementing global saved items interface for unified content management
+- Completing chat system with conversation persistence
 - Enhancing shared ChatInterface component functionality
-- Expanding admin interface for chat management
-- Implementing storage integration for Mermaid flowcharts
+- Expanding admin interface for chat and content management
+- Implementing storage integration for user content
 - Refining shared component architecture
 - Enhancing error handling and validation
 - Testing and documentation improvements
 - Database-driven models and prompts configuration for AI tools
 - User administration and role-based access control
 - Prompt management system with reusable prompt components (injects)
-- Planning and implementing a global saved items interface for user content
-- Implementing Google One Tap authentication for seamless login experience
 
 ## Recent Changes
+
+- Implementing saved items interface:
+  - Created SavedItemsClient component for managing saved content
+  - Added saved-items API endpoint
+  - Designed interface for unified content management
+  - Prepared for content type-specific previews
+  - Added filtering capabilities by tool type
 
 - Refactored Typescript interfaces to use shared interfaces in: /lib/types
 
@@ -130,22 +136,24 @@
 
 ## Next Steps
 
-1. Complete chat system implementation:
+1. Complete saved items interface implementation:
+   - Implement content type-specific preview components
+   - Add search functionality
+   - Complete filtering system
+   - Add content organization features
+   - Implement bulk operations
+   - Add sharing capabilities
+
+2. Complete chat system implementation:
    - Finish conversation persistence
    - Add user preferences for chat
    - Implement chat history viewing
    - Add conversation management features
 
-2. Complete storage integration:
+3. Complete storage integration:
    - Set up storage access policies
    - Test storage functionality
    - Document storage integration
-
-3. Implement global saved items interface:
-   - Create saved-items page with filtering by tool type
-   - Develop API endpoints for retrieving saved content
-   - Design UI components for different content types
-   - Implement search and filtering functionality
 
 4. Enhance database-driven prompt system:
    - Improve prompt inject linking interface

@@ -29,6 +29,21 @@ flowchart TD
         Session --> DB
     end
     
+    subgraph SavedItemsSystem[Saved Items System]
+        SavedItemsClient[Saved Items Client]
+        SavedItemsAPI[Saved Items API]
+        ContentPreview[Content Preview]
+        ContentFilters[Content Filters]
+        ContentSearch[Content Search]
+        
+        SavedItemsClient --> SavedItemsAPI
+        SavedItemsClient --> ContentPreview
+        SavedItemsClient --> ContentFilters
+        SavedItemsClient --> ContentSearch
+        SavedItemsAPI --> DB
+        SavedItemsAPI --> Storage
+    end
+
     subgraph ChatSystem[Chat System]
         ChatInterface[Chat Interface]
         ConversationsAPI[Conversations API]
@@ -40,6 +55,7 @@ flowchart TD
         ChatInterface --> ChatPreferences
         ChatHistory --> DB
         ChatPreferences --> DB
+        ChatHistory --> SavedItemsSystem
     end
     
     subgraph PromptSystem
@@ -140,7 +156,23 @@ flowchart TD
 6. Chat history persisted to database
 7. User preferences applied to interactions
 
+### Saved Items Architecture
+
+- Global saved items interface for unified content management
+- Content type-specific preview components
+- Filtering and search capabilities
+- Content organization features
+- Bulk operations support
+- Integration with tool-specific content (flowcharts, conversations, etc.)
+
 ### Component Architecture
+
+- Saved Items Components
+  - SavedItemsClient: Main interface for saved content
+  - ContentPreview: Type-specific content previews
+  - ContentFilters: Content filtering system
+  - ContentSearch: Search functionality
+  - ContentOrganizer: Content organization features
 
 - Authentication Components
   - GoogleOneTap: Handles Google One Tap UI and auth flow
@@ -190,6 +222,7 @@ flowchart TD
 ### Chat System Architecture
 
 - Conversation Management
+  - Integration with saved items system
   - Persistent chat history
   - User-specific conversations
   - Multiple conversation support

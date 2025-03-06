@@ -30,6 +30,18 @@
 
 ## In Progress
 
+- Saved items interface implementation
+  - [x] Created SavedItemsClient component
+  - [x] Added saved-items API endpoint
+  - [x] Designed interface for unified content management
+  - [x] Added basic filtering capabilities
+  - [ ] Implement content type-specific previews
+  - [ ] Add search functionality
+  - [ ] Complete filtering system
+  - [ ] Add content organization features
+  - [ ] Implement bulk operations
+  - [ ] Add sharing capabilities
+
 - Chat system implementation
   - [x] Added conversations API endpoint
   - [x] Enhanced ChatInterface with conversation support
@@ -119,13 +131,13 @@
 
 ## Planned Features
 
-- Global saved items interface
-  - Centralized page for all saved user content
-  - Filtering by tool type (flowcharts, conversations, etc.)
-  - Search functionality
-  - Preview cards for different content types
-  - Management features (rename, delete, organize)
-  - Consistent UI for all saved content types
+- Saved items interface enhancements
+  - Advanced search capabilities
+  - Content organization tools
+  - Sharing features
+  - Bulk operations
+  - Content type-specific actions
+  - Integration with additional tools
 
 - Chat system enhancements
   - Conversation history browser
@@ -155,11 +167,13 @@
 
 ## Known Issues
 
-- Chat history persistence not fully implemented
+- Content preview components not implemented for all types
+- Advanced search functionality not implemented
+- Bulk operations not yet available
 - Storage access policies need to be set up in Supabase Dashboard
 - Unit tests needed for components and services
 - Error boundaries not yet implemented
-- Chat history persistence not implemented
+- Chat history persistence not fully implemented
 - User preferences not saved
 
 ## Testing Status
@@ -206,13 +220,14 @@
 
 ## Next Milestone
 
-1. Saved Items Interface Implementation
-   - Design database queries for retrieving saved content
-   - Create API endpoints for saved items
-   - Develop UI components for the saved items page
-   - Implement filtering and search functionality
-   - Add content type-specific preview components
-   - Test with different saved content types
+1. Complete Saved Items Interface
+   - Implement content type-specific preview components
+   - Add search functionality
+   - Complete filtering system
+   - Add content organization features
+   - Implement bulk operations
+   - Add sharing capabilities
+   - Test with all content types
 
 2. Testing Implementation
    - Set up testing framework

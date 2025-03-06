@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import type { Components } from "react-markdown";
 import { Button } from "./Button";
 import { Textarea } from "./Textarea";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -271,8 +274,30 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     <p className="text-sm font-bold text-foreground mb-1">
                       {message.role === "user" ? "You" : assistantName}
                     </p>
-                    <div className="text-sm whitespace-pre-wrap">
-                      {message.content}
+                    <div className="text-sm">
+                      {message.role === "assistant" ? (
+                        <div className="prose dark:prose-invert prose-sm max-w-none whitespace-pre-wrap prose-pre:p-0 prose-pre:m-0">
+                          <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              pre: ({ children, ...props }) => (
+                                <pre className="overflow-auto p-2 bg-gray-100 dark:bg-gray-800 rounded" {...props}>
+                                  {children}
+                                </pre>
+                              ),
+                              code: ({ children, className, ...props }) => (
+                                <code className={`${className || ""} ${!className ? "bg-gray-100 dark:bg-gray-800 rounded px-1" : ""}`} {...props}>
+                                  {children}
+                                </code>
+                              )
+                            } as Components}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        <div className="whitespace-pre-wrap">{message.content}</div>
+                      )}
                     </div>
                   </div>
                 ))}
