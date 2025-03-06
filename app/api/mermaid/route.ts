@@ -5,7 +5,7 @@ import { getPromptForTask } from "@/lib/ai/config/prompts";
 
 export async function POST(request: Request) {
   try {
-    const { inputText, promptType = "default" } = await request.json();
+    const { inputText, promptType = "default", toolId } = await request.json();
 
     if (!inputText?.trim()) {
       return NextResponse.json(
@@ -21,9 +21,16 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!toolId) {
+      return NextResponse.json(
+        { error: "Tool ID is required" },
+        { status: 400 }
+      );
+    }
+
     // Get the appropriate model and prompt for the task
-    const model = await getModelForTask("mermaid");
-    const prompt = await getPromptForTask("mermaid", promptType, inputText);
+    const model = await getModelForTask(toolId);
+    const prompt = await getPromptForTask(toolId, promptType, inputText);
 
     try {
       // Generate the Mermaid code

@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { title, messages, toolName, modelId, promptId } = await request.json();
+    const { title, messages, toolId, modelId, promptId } = await request.json();
     
     // Create Supabase client
     const supabase = await createClient();
@@ -93,6 +93,20 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+
+    // Verify tool exists
+    const { data: tool, error: toolError } = await supabase
+      .from("tools")
+      .select("id")
+      .eq("id", toolId)
+      .single();
+
+    if (toolError || !tool) {
+      return NextResponse.json(
+        { error: "Invalid tool ID" },
+        { status: 400 }
+      );
+    }
     
     // Create the conversation
     const { data: conversation, error: conversationError } = await supabase
@@ -100,7 +114,7 @@ export async function POST(request: Request) {
       .insert({
         user_id: user.id,
         title: title || "Untitled Conversation",
-        tool_name: toolName,
+        tool_id: toolId,
         model_id: modelId || null,
         prompt_id: promptId || null
       })

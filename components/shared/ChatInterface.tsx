@@ -27,6 +27,7 @@ interface Prompt {
   display_name: string;
   description: string;
   type: "system" | "public" | "user";
+  tool_id: string;
 }
 
 interface ChatInterfaceProps {
@@ -37,7 +38,7 @@ interface ChatInterfaceProps {
   className?: string;
   showModelSelector?: boolean;
   showPromptSelector?: boolean;
-  toolName?: string;
+  toolId: string; // UUID of the tool
   enableSave?: boolean;
   initialMessages?: Message[];
   initialModelId?: string;
@@ -52,7 +53,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   className = "",
   showModelSelector = false,
   showPromptSelector = false,
-  toolName = "chat",
+  toolId,
   enableSave = false,
   initialMessages = [],
   initialModelId,
@@ -112,11 +113,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   
   // Fetch available prompts for the tool
   const fetchPrompts = useCallback(async () => {
+    if (!toolId) {
+      setPromptError('Tool ID is required');
+      return;
+    }
+    
     setIsLoadingPrompts(true);
     setPromptError(null);
     
     try {
-      const response = await fetch(`/api/prompts?tool_name=${toolName}&type=public`);
+      const response = await fetch(`/api/prompts?tool_id=${toolId}&type=public`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch prompts');
@@ -135,9 +141,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     } finally {
       setIsLoadingPrompts(false);
     }
-  }, [toolName]);
-  
-  // Fetch models and prompts on component mount
+  }, [toolId]);
+
+  // Fetch models and prompts when dependencies change
   useEffect(() => {
     if (showModelSelector) {
       fetchModels();
@@ -169,13 +175,15 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         history?: Message[];
         modelId?: string;
         promptId?: string;
+        toolId: string;
       }
       
       const requestBody: RequestBody = {
         message: userMessage,
         history: messages.length > 0 ? messages : undefined,
         modelId: showModelSelector && selectedModelId ? selectedModelId : undefined,
-        promptId: showPromptSelector && selectedPromptId ? selectedPromptId : undefined
+        promptId: showPromptSelector && selectedPromptId ? selectedPromptId : undefined,
+        toolId: toolId
       };
       
       const response = await fetch(apiEndpoint, {
@@ -326,7 +334,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             body: JSON.stringify({
                               title: conversationTitle || "Untitled Conversation",
                               messages,
-                              toolName,
+                              toolId: toolId,
                               modelId: selectedModelId || undefined,
                               promptId: selectedPromptId || undefined
                             }),

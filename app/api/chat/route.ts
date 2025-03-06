@@ -6,11 +6,19 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    const { message, history, modelId, promptId } = await request.json();
+    const { message, history, modelId, promptId, toolId } = await request.json();
     console.log("Chat API received message:", message);
     console.log("Chat API received history:", history);
     console.log("Chat API received modelId:", modelId);
     console.log("Chat API received promptId:", promptId);
+    console.log("Chat API received toolId:", toolId);
+
+    if (!toolId) {
+      return NextResponse.json(
+        { error: "Tool ID is required" },
+        { status: 400 }
+      );
+    }
 
     if (!message?.trim()) {
       return NextResponse.json(
@@ -37,13 +45,13 @@ export async function POST(request: Request) {
       if (modelError) {
         console.error("Error fetching model by ID:", modelError);
         console.log("Falling back to default model for chat task");
-        model = await getModelForTask("chat");
+        model = await getModelForTask(toolId);
       } else {
         model = modelData;
       }
     } else {
       console.log("Using default model for chat task");
-      model = await getModelForTask("chat");
+      model = await getModelForTask(toolId);
     }
 
     console.log("Selected model:", model);

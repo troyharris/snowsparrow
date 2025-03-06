@@ -1,41 +1,25 @@
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const tools = [
-  {
-    name: "Business Continuity Plan",
-    href: "/bcp",
-    icon: "description",
-  },
-  {
-    name: "Flowchart Creator",
-    href: "/mermaid",
-    icon: "account_tree",
-  },
-  {
-    name: "Employee Handbook",
-    href: "/handbook",
-    icon: "menu_book",
-  },
-  {
-    name: "AI Chat",
-    href: "/chat",
-    icon: "chat",
-  },
-  {
-    name: "Saved Items",
-    href: "/saved-items",
-    icon: "folder",
-  },
-];
+import { Tool } from "./types";
+
+async function fetchTools(): Promise<Tool[]> {
+  const response = await fetch('/api/tools?is_active=true');
+  const data = await response.json();
+  return data.tools || [];
+}
 
 export default function NavDropdown() {
   const pathname = usePathname();
+  const [tools, setTools] = useState<Tool[]>([]);
   
-  // Add Google Material Icons
   useEffect(() => {
+    // Fetch tools
+    fetchTools().then(setTools);
+    
+    // Add Google Material Icons
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
     link.rel = 'stylesheet';
@@ -75,7 +59,15 @@ export default function NavDropdown() {
       >
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {tools.map((tool) => (
+            {[...tools, {
+              id: 'saved-items',
+              name: 'Saved Items',
+              href: '/saved-items',
+              icon: 'folder',
+              description: 'View your saved items',
+              is_active: true,
+              sort_order: 999
+            }].map((tool) => (
               <Menu.Item key={tool.href}>
                 {({ active }: { active: boolean }) => (
                   <Link

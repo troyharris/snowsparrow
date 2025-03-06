@@ -1,39 +1,19 @@
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/shared/Card";
+import { createClient } from "@/utils/supabase/server";
 
-// Tool data array for easy addition of new tools
-const tools = [
-  {
-    name: "Business Continuity Plan Creator",
-    description:
-      "Create a comprehensive business continuity plan by answering a series of questions. The AI will guide you through the process.",
-    icon: "description",
-    href: "/bcp",
-  },
-  {
-    name: "Flowchart Creator",
-    description:
-      "Transform text descriptions into professional flowcharts instantly. Perfect for documenting processes and procedures.",
-    icon: "account_tree",
-    href: "/mermaid",
-  },
-  {
-    name: "Employee Handbook Chat",
-    description:
-      "Chat with an AI assistant about employee handbook questions and get instant answers.",
-    icon: "menu_book",
-    href: "/handbook",
-  },
-  {
-    name: "AI Chat",
-    description:
-      "Chat with AI models using different prompts. Select a model and prompt to customize your experience.",
-    icon: "chat",
-    href: "/chat",
-  },
-];
+async function getTools() {
+  const supabase = await createClient();
+  const { data: tools } = await supabase
+    .from("tools")
+    .select("*")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+  return tools || [];
+}
 
-export default function Home() {
+export default async function Home() {
+  const tools = await getTools();
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
       {/* Add Google Material Icons */}

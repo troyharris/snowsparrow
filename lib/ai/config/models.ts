@@ -60,49 +60,21 @@ export async function getModelByApiString(
   return models.find((model) => model.api_string === apiString);
 }
 
-export type AITask = "mermaid" | "code" | "text" | "handbook" | string;
-
-// Task to model mapping - this could also be moved to the database in the future
-export const modelPreferences: Record<AITask, string[]> = {
-  mermaid: ["google/gemini-2.0-flash-001"], // Preferred models in order by API string
-  code: ["google/gemini-2.0-flash-001"],
-  text: ["google/gemini-2.0-flash-001"],
-  handbook: ["google/gemini-2.0-flash-001"],
-  chat: ["google/gemini-2.0-flash-001"],
-};
-
 /**
- * Gets the appropriate model for a specific task
+ * Gets the appropriate model for a specific tool
  */
-export async function getModelForTask(task: AITask): Promise<AIModel> {
-  console.log(`getModelForTask: Getting model for task: ${task}`);
+export async function getModelForTask(toolId: string): Promise<AIModel> {
+  console.log(`getModelForTask: Getting model for tool ID: ${toolId}`);
 
-  const preferredApiStrings =
-    modelPreferences[task] || modelPreferences["text"];
-  console.log(`getModelForTask: Preferred API strings:`, preferredApiStrings);
-
-  console.log(`getModelForTask: Fetching all models`);
+  // Get all models
   const allModels = await getAllModels();
-  console.log(
-    `getModelForTask: All models:`,
-    allModels.map((m) => m.api_string)
-  );
+  console.log(`getModelForTask: Fetched ${allModels.length} models`);
 
-  // Find the first available preferred model
-  for (const apiString of preferredApiStrings) {
-    console.log(
-      `getModelForTask: Looking for model with API string: ${apiString}`
-    );
-    const model = allModels.find((m) => m.api_string === apiString);
-    if (model) {
-      console.log(`getModelForTask: Found model:`, model);
-      return model;
-    }
-  }
-
-  // Fallback to first available model
+  // Find the first model that supports this tool
+  // For now, we'll use the first available model since we haven't implemented tool-specific model preferences yet
+  // In the future, we could add a tool_models table to specify which models are preferred for each tool
   if (allModels.length > 0) {
-    console.log(`getModelForTask: Using fallback model:`, allModels[0]);
+    console.log(`getModelForTask: Using model:`, allModels[0]);
     return allModels[0];
   }
 

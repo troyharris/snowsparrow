@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import type { Tool } from "@/components/shared/types";
 import dynamic from "next/dynamic";
 import {
   LoadingSpinner,
@@ -25,6 +26,27 @@ export default function MermaidPage() {
   );
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [toolId, setToolId] = useState<string | null>(null);
+  
+  // Fetch tool ID for "mermaid"
+  useEffect(() => {
+    const fetchToolId = async () => {
+      try {
+        const response = await fetch('/api/tools');
+        const data = await response.json();
+        const mermaidTool = data.tools.find((t: Tool) => t.name === 'Flowchart Creator');
+        if (mermaidTool) {
+          setToolId(mermaidTool.id);
+        } else {
+          console.error('Mermaid tool not found');
+        }
+      } catch (err) {
+        console.error('Error fetching tool ID:', err);
+      }
+    };
+    
+    fetchToolId();
+  }, []);
 
   const generateDiagram = async () => {
     try {
@@ -36,7 +58,7 @@ export default function MermaidPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ inputText, promptType }),
+        body: JSON.stringify({ inputText, promptType, toolId }),
       });
 
       const data = await response.json();

@@ -314,14 +314,18 @@ export async function getProcessedPromptByName(name: string): Promise<string> {
  * Gets a prompt for a specific task and formats it for use with OpenRouter
  */
 export async function getPromptForTask(
-  toolName: string,
-  promptName: string,
+  toolId: string,
+  promptName: string = "default",
   userInput: string
 ): Promise<{ messages: Array<{ role: string; content: string }> }> {
-  const prompt = await getPromptByName(`${toolName}_${promptName}`);
+  // Get all prompts for this tool
+  const prompts = await getPromptsByToolId(toolId);
+  
+  // Find the specific prompt we need
+  const prompt = prompts.find(p => p.name.endsWith(`${promptName}`));
 
   if (!prompt) {
-    throw new Error(`Prompt not found for task: ${toolName}_${promptName}`);
+    throw new Error(`Prompt not found for tool ID: ${toolId}, prompt name: ${promptName}`);
   }
 
   const processedContent = await processPrompt(prompt);

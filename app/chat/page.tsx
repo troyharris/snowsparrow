@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
+import type { Tool } from "@/components/shared/types";
 import { useSearchParams } from "next/navigation";
 import { ChatInterface } from "@/components/shared";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
@@ -26,6 +27,27 @@ function ChatContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [conversation, setConversation] = useState<Conversation | null>(null);
+  const [toolId, setToolId] = useState<string | null>(null);
+  
+  // Fetch tool ID for "chat"
+  useEffect(() => {
+    const fetchToolId = async () => {
+      try {
+        const response = await fetch('/api/tools');
+        const data = await response.json();
+        const chatTool = data.tools.find((t: Tool) => t.name === 'AI Chat');
+        if (chatTool) {
+          setToolId(chatTool.id);
+        } else {
+          console.error('Chat tool not found');
+        }
+      } catch (err) {
+        console.error('Error fetching tool ID:', err);
+      }
+    };
+    
+    fetchToolId();
+  }, []);
   
   useEffect(() => {
     const loadConversation = async () => {
@@ -60,10 +82,11 @@ function ChatContent() {
     loadConversation();
   }, [conversationId]);
   
-  if (isLoading) {
+  // Show loading state while fetching toolId or conversation
+  if (isLoading || !toolId) {
     return (
       <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8 flex items-center justify-center">
-        <LoadingSpinner text="Loading conversation..." />
+        <LoadingSpinner text={isLoading ? "Loading conversation..." : "Loading chat..."} />
       </div>
     );
   }
@@ -94,7 +117,7 @@ function ChatContent() {
           placeholder="Type your message here..."
           showModelSelector={true}
           showPromptSelector={true}
-          toolName="chat"
+          toolId={toolId || ''}
           enableSave={true}
           initialMessages={conversation?.messages}
           initialModelId={conversation?.model_id || undefined}
