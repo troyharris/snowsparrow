@@ -1,4 +1,4 @@
-import { AIModel } from "../config/models";
+import { AIModel } from "@/lib/types";
 
 export interface OpenRouterResponse {
   choices: Array<{

@@ -1,13 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-
-export interface AIModel {
-  id: string;
-  display_name: string;
-  api_string: string;
-  description: string;
-  supports_vision: boolean;
-  supports_thinking: boolean;
-}
+import { AIModel } from "@/lib/types";
 
 // Cache for models to avoid frequent database calls
 let modelsCache: AIModel[] | null = null;

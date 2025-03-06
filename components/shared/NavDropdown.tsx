@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Tool } from "./types";
+import { Tool } from "@/lib/types";
 
 async function fetchTools(): Promise<Tool[]> {
   const response = await fetch('/api/tools?is_active=true');

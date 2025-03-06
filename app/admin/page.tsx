@@ -1,12 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/shared";
 import Link from "next/link";
-
-interface AdminTool {
-  name: string;
-  description: string;
-  href: string;
-  icon: string;
-}
+import { AdminTool } from "@/lib/types";
 
 const adminTools: AdminTool[] = [
   {

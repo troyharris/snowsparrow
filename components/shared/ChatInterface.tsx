@@ -8,27 +8,7 @@ import { ErrorMessage } from "./ErrorMessage";
 import { SuccessMessage } from "./SuccessMessage";
 import { Card, CardContent, CardHeader } from "./Card";
 import { Select } from "./Select";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
-
-interface Model {
-  id: string;
-  display_name: string;
-  api_string: string;
-  description: string;
-}
-
-interface Prompt {
-  id: string;
-  name: string;
-  display_name: string;
-  description: string;
-  type: "system" | "public" | "user";
-  tool_id: string;
-}
+import { ConversationMessage, AIModel, Prompt } from "@/lib/types";
 
 interface ChatInterfaceProps {
   apiEndpoint: string;
@@ -40,7 +20,7 @@ interface ChatInterfaceProps {
   showPromptSelector?: boolean;
   toolId: string; // UUID of the tool
   enableSave?: boolean;
-  initialMessages?: Message[];
+  initialMessages?: ConversationMessage[];
   initialModelId?: string;
   initialPromptId?: string;
 }
@@ -59,14 +39,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   initialModelId,
   initialPromptId,
 }) => {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<ConversationMessage[]>(initialMessages);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const assistantName = "Snowsparrow";
   
   // Model and prompt selection state
-  const [models, setModels] = useState<Model[]>([]);
+  const [models, setModels] = useState<AIModel[]>([]);
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [selectedModelId, setSelectedModelId] = useState<string>(initialModelId || "");
   const [selectedPromptId, setSelectedPromptId] = useState<string>(initialPromptId || "");
@@ -172,7 +152,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       // Prepare request body based on available selections
       interface RequestBody {
         message: string;
-        history?: Message[];
+        history?: ConversationMessage[];
         modelId?: string;
         promptId?: string;
         toolId: string;

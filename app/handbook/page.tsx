@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import type { Tool } from "@/components/shared/types";
+import type { Tool } from "@/lib/types";
 import { ChatInterface } from "@/components/shared";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 

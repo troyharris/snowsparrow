@@ -10,23 +10,15 @@ import {
   ErrorMessage,
   SuccessMessage,
 } from "@/components/shared";
-
-interface Model {
-  id: string;
-  display_name: string;
-  api_string: string;
-  description: string;
-  supports_vision: boolean;
-  supports_thinking: boolean;
-}
+import { AIModel } from "@/lib/types"
 
 export default function ModelsAdminPage() {
-  const [models, setModels] = useState<Model[]>([]);
+  const [models, setModels] = useState<AIModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [editingModel, setEditingModel] = useState<Model | null>(null);
-  const [newModel, setNewModel] = useState<Partial<Model>>({
+  const [editingModel, setEditingModel] = useState<AIModel | null>(null);
+  const [newModel, setNewModel] = useState<Partial<AIModel>>({
     display_name: "",
     api_string: "",
     description: "",

@@ -6,7 +6,7 @@ import { Button } from "@/components/shared/Button";
 import { Textarea } from "@/components/shared/Textarea";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { SuccessMessage } from "@/components/shared/SuccessMessage";
-import { PromptInject } from "@/lib/ai/config/prompts";
+import { PromptInject } from "@/lib/types";
 
 export default function PromptInjectForm({ inject }: { inject: PromptInject | null }) {
   const router = useRouter();

@@ -7,36 +7,7 @@ import { Button } from "@/components/shared/Button";
 import { Textarea } from "@/components/shared/Textarea";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { SuccessMessage } from "@/components/shared/SuccessMessage";
-
-import { PromptInject } from "@/lib/ai/config/prompts";
-
-interface Tool {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  href: string;
-  sort_order: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Prompt {
-  id: string;
-  name: string;
-  display_name: string;
-  description: string;
-  content: string;
-  tool_name: string;
-  tool_id: string | null;
-  type: "system" | "public" | "user";
-}
-
-interface PromptWithInjects extends Prompt {
-  injects: PromptInject[];
-  selectedInjectIds: string[];
-}
+import { Tool, Prompt, PromptWithInjects, PromptInject} from "@/lib/types";
 
 export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
   const router = useRouter();

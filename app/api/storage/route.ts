@@ -1,15 +1,10 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { UploadRequest } from "@/lib/types";
 
 // 5MB in bytes
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-interface UploadRequest {
-  imageData: string; // base64 PNG data
-  prompt: string; // original prompt
-  mermaidCode: string; // generated mermaid code
-}
 
 function generateUniqueFileName(userId: string): string {
   const timestamp = Date.now();

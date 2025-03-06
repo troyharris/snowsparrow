@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-
-interface ConversationMessage {
-  role: string;
-  content: string;
-}
+import { ConversationMessage } from "@/lib/types";
 
 export async function GET(request: Request) {
   try {

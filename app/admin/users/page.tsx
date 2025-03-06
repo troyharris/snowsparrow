@@ -11,15 +11,7 @@ import {
   SuccessMessage,
 } from "@/components/shared";
 
-interface User {
-  id: string;
-  username: string | null;
-  full_name: string | null;
-  website: string | null;
-  avatar_url: string | null;
-  updated_at: string | null;
-  is_admin: boolean;
-}
+import { User } from "@/lib/types";
 
 export default function UsersAdminPage() {
   const [users, setUsers] = useState<User[]>([]);

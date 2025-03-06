@@ -17,6 +17,8 @@
 
 ## Recent Changes
 
+- Refactored Typescript interfaces to use shared interfaces in: /lib/types
+
 - Implemented Google One Tap authentication:
   - Added Google One Tap component with nonce-based security
   - Created auth callback route for code exchange

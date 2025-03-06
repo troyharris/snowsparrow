@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import type { Tool } from "@/components/shared/types";
+import type { Tool } from "@/lib/types";
 import dynamic from "next/dynamic";
 import {
   LoadingSpinner,

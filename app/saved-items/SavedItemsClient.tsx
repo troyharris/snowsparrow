@@ -6,16 +6,7 @@ import { Card } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
-
-interface SavedItem {
-  id: string
-  title: string
-  type: 'conversation' | 'flowchart'
-  created_at: string
-  updated_at: string
-  preview: string | null
-  tool?: string
-}
+import { SavedItem } from '@/lib/types'
 
 export default function SavedItemsClient() {
   const router = useRouter()

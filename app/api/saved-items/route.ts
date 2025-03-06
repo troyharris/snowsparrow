@@ -1,30 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
-
-interface Conversation {
-  id: string
-  title: string
-  created_at: string
-  updated_at: string
-  tool_name: string
-}
-
-interface StorageFile {
-  id: string
-  name: string
-  created_at: string
-  updated_at: string
-}
-
-interface SavedItem {
-  id: string
-  title: string
-  type: 'conversation' | 'flowchart'
-  created_at: string
-  updated_at: string
-  preview: string | null
-  tool?: string
-}
+import { DatabaseConversation, StorageFile, SavedItem } from "@/lib/types";
 
 export async function GET(request: Request) {
   try {
@@ -65,12 +41,12 @@ export async function GET(request: Request) {
         console.error('Error fetching conversations:', conversationsError)
       } else if (conversations) {
         items.push(
-          ...conversations.map((conv: Conversation) => ({
+          ...conversations.map((conv: DatabaseConversation) => ({
             id: conv.id,
             title: conv.title,
             type: 'conversation' as const,
-            created_at: conv.created_at,
-            updated_at: conv.updated_at,
+            created_at: conv.created_at ?? "",
+            updated_at: conv.updated_at ?? "",
             preview: null, // Could add first message preview later
             tool: conv.tool_name // Add tool to the saved item
           }))

@@ -1,24 +1,12 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
-import type { Tool } from "@/components/shared/types";
+import type { Tool } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
 import { ChatInterface } from "@/components/shared";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
-
-interface Conversation {
-  id: string;
-  title: string;
-  model_id: string | null;
-  prompt_id: string | null;
-  messages: Message[];
-}
+import { Conversation } from "@/lib/types";
 
 function BCPContent() {
   const searchParams = useSearchParams();
@@ -69,6 +57,8 @@ function BCPContent() {
           title: data.conversation.title,
           model_id: data.conversation.model_id,
           prompt_id: data.conversation.prompt_id,
+          created_at: data.conversation.created_at,
+          updated_at: data.conversation.updated_at,
           messages: data.messages
         });
       } catch (err) {

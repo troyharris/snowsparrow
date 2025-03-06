@@ -77,6 +77,7 @@
   - [x] Component documentation
   - [ ] Unit tests
   - [ ] Error boundaries
+  - [x] Shared Types in /lib/types
 
 - User administration
 

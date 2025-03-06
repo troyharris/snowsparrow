@@ -163,7 +163,7 @@ flowchart TD
 - Tool-specific components in app/ directory
 - Admin components in app/admin/ directory
 - Utility functions in utils/
-- Type definitions in types/
+- Type definitions in /lib/types/
 
 ### AI Service Layer
 
