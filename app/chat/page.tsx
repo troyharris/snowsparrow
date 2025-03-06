@@ -90,7 +90,7 @@ function ChatContent() {
   }
   return (
     <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl leading-10 font-bold tracking-tight text-foreground sm:text-4xl">
             AI Chat

@@ -15,15 +15,15 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "font-medium py-2.5 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-ring";
+    "font-semibold text-base py-3 px-6 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2 active:scale-95";
   const widthStyles = fullWidth ? "w-full" : "";
   const disabledStyles = "disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantStyles = {
-    primary: "bg-accent hover:bg-accent-hover text-accent-foreground",
+    primary: "bg-accent hover:bg-accent-hover text-accent-foreground shadow-sm hover:shadow-md",
     secondary:
-      "bg-secondary hover:bg-secondary-hover text-secondary-foreground",
-    outline: "border border-input hover:bg-accent hover:text-accent-foreground",
+      "bg-secondary hover:bg-secondary-hover text-secondary-foreground shadow-sm hover:shadow-md",
+    outline: "border-2 border-input hover:bg-accent/10 hover:border-accent hover:text-accent-foreground",
   };
 
   const combinedClassName =

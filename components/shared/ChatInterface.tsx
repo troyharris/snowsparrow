@@ -199,11 +199,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className={`flex flex-col ${className}`}>
+    <div className={`flex flex-col w-full mx-auto ${className}`}>
       <Card>
-        {title && <CardHeader title={title} description={description} />}
+        {title && <CardHeader title={title} description={description} className="text-lg" />}
         <CardContent>
-          <div className="flex flex-col space-y-6 mt-4">
+          <div className="flex flex-col space-y-8 mt-6">
             {/* Model and Prompt Selectors */}
             {(showModelSelector || showPromptSelector) && (
               <div className="flex flex-col sm:flex-row gap-4 mb-2">
@@ -263,20 +263,20 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`p-3 rounded-lg ${
+                    className={`p-4 rounded-xl shadow-sm ${
                       message.role === "user"
-                        ? "bg-gray-300 dark:bg-accent-hover ml-auto"
-                        : "bg-input dark:bg-border"
+                        ? "bg-accent text-accent-foreground ml-auto"
+                        : "bg-input dark:bg-border border border-border"
                     } ${
-                      message.role === "user" ? "max-w-[80%]" : "max-w-[90%]"
+                      message.role === "user" ? "max-w-[85%]" : "max-w-[95%]"
                     }`}
                   >
-                    <p className="text-sm font-bold text-foreground mb-1">
+                    <p className="text-base font-semibold text-foreground mb-2">
                       {message.role === "user" ? "You" : assistantName}
                     </p>
-                    <div className="text-sm">
+                    <div className="text-base">
                       {message.role === "assistant" ? (
-                        <div className="prose dark:prose-invert prose-sm max-w-none whitespace-pre-wrap prose-pre:p-0 prose-pre:m-0">
+                        <div className="prose dark:prose-invert">
                           <ReactMarkdown 
                             remarkPlugins={[remarkGfm]}
                             components={{
@@ -303,9 +303,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No messages yet</p>
-                <p className="text-sm mt-2">
+              <div className="text-center py-12 text-muted-foreground">
+                <p className="text-lg">No messages yet</p>
+                <p className="text-base mt-3">
                   Type a message to start the conversation
                 </p>
               </div>
@@ -412,7 +412,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder={placeholder}
-                className="min-h-[100px] w-full"
+                className="min-h-[120px] w-full text-base"
                 fullWidth
                 disabled={isLoading}
               />

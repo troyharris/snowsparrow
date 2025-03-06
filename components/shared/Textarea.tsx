@@ -15,9 +15,9 @@ export function Textarea({
   ...props
 }: TextareaProps) {
   const baseStyles =
-    "resize-y bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring";
+    "resize-y bg-input border border-border rounded-xl text-foreground text-base leading-relaxed px-4 py-3 transition-all duration-200 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-sm hover:shadow-md";
   const widthStyles = fullWidth ? "w-full" : "";
-  const errorStyles = error ? "border-red-500 focus:border-red-500" : "";
+  const errorStyles = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "";
   const combinedClassName =
     `${baseStyles} ${widthStyles} ${errorStyles} ${className}`.trim();
 
@@ -26,13 +26,13 @@ export function Textarea({
       {label && (
         <label
           htmlFor={id}
-          className="block text-sm font-medium text-foreground"
+          className="block text-base font-semibold text-foreground mb-2"
         >
           {label}
         </label>
       )}
       <textarea id={id} className={combinedClassName} {...props} />
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm font-medium text-red-500 mt-2">{error}</p>}
     </div>
   );
 }
