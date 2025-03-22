@@ -8,7 +8,7 @@ export interface DatabaseConversation {
     title: string
     created_at: string
     updated_at: string
-    tool_name: string
+    tool: { name: string | null, href: string | null } | null
 }
 
 export interface Conversation {
