@@ -123,7 +123,7 @@ export default function SavedItemsClient() {
                 className={`p-4 ${item.type === 'conversation' ? 'cursor-pointer hover:bg-gray-50' : ''}`}
                 onClick={() => {
                   if (item.type === 'conversation' && item.tool) {
-                    router.push(`/${item.tool}?id=${item.id}`)
+                    router.push(`${item.tool_href}?id=${item.id}`)
                   }
                 }}
               >

@@ -64,6 +64,34 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [conversationTitle, setConversationTitle] = useState<string>("");
   const [showTitleInput, setShowTitleInput] = useState(false);
+
+  // Function to generate conversation title using AI
+  const generateConversationTitle = async (messages: ConversationMessage[]): Promise<string> => {
+    try {
+      const response = await fetch(apiEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: "Generate a short title for this conversation. Include just the title in plain-text. Do not use Markdown. Make sure you return just one or two sentences",
+          history: messages,
+          toolId: toolId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate title");
+      }
+
+      return data.response;
+    } catch (error) {
+      console.error("Error generating conversation title:", error);
+      return "Untitled Conversation"; // Fallback title
+    }
+  };
   
   // Fetch available models
   const fetchModels = useCallback(async () => {
@@ -199,7 +227,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className={`flex flex-col w-full mx-auto ${className}`}>
+    <div className={`flex flex-col w-full max-w-5xl mx-auto ${className}`}>
       <Card>
         {title && <CardHeader title={title} description={description} className="text-lg" />}
         <CardContent>
@@ -263,30 +291,28 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`p-4 rounded-xl shadow-sm ${
+                    className={`p-4 ${
                       message.role === "user"
-                        ? "bg-accent text-accent-foreground ml-auto"
-                        : "bg-input dark:bg-border border border-border"
-                    } ${
-                      message.role === "user" ? "max-w-[85%]" : "max-w-[95%]"
-                    }`}
+                        ? "bg-slate-100 rounded-md"
+                        : ""
+                    } `}
                   >
-                    <p className="text-base font-semibold text-foreground mb-2">
+                    <p className="text-base font-semibold text-foreground mb-6 border-b-2">
                       {message.role === "user" ? "You" : assistantName}
                     </p>
-                    <div className="text-base">
+                    <div className="">
                       {message.role === "assistant" ? (
                         <div className="prose dark:prose-invert">
                           <ReactMarkdown 
                             remarkPlugins={[remarkGfm]}
                             components={{
                               pre: ({ children, ...props }) => (
-                                <pre className="overflow-auto p-2 bg-gray-100 dark:bg-gray-800 rounded" {...props}>
+                                <pre className="overflow-auto p-2 rounded" {...props}>
                                   {children}
                                 </pre>
                               ),
                               code: ({ children, className, ...props }) => (
-                                <code className={`${className || ""} ${!className ? "bg-gray-100 dark:bg-gray-800 rounded px-1" : ""}`} {...props}>
+                                <code className={`${className || ""} ${!className ? "rounded px-1" : ""}`} {...props}>
                                   {children}
                                 </code>
                               )
@@ -324,37 +350,40 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       className="flex-1 px-3 py-2 border rounded-md text-sm"
                       disabled={isSaving}
                     />
-                    <Button 
+                    <Button
                       onClick={async () => {
                         setIsSaving(true);
                         setSaveError(null);
                         setSaveSuccess(false);
-                        
+
                         try {
+                          // Generate conversation title
+                          const generatedTitle = await generateConversationTitle(messages);
+
                           const response = await fetch('/api/conversations', {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                              title: conversationTitle || "Untitled Conversation",
+                              title: generatedTitle || "Untitled Conversation",
                               messages,
                               toolId: toolId,
                               modelId: selectedModelId || undefined,
                               promptId: selectedPromptId || undefined
                             }),
                           });
-                          
+
                           const data = await response.json();
-                          
+
                           if (!response.ok) {
                             throw new Error(data.error || "Failed to save conversation");
                           }
-                          
+
                           setSaveSuccess(true);
                           setConversationTitle("");
                           setShowTitleInput(false);
-                          
+
                           setTimeout(() => {
                             setSaveSuccess(false);
                           }, 3000);
@@ -379,15 +408,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   </div>
                 ) : (
                   <div className="flex justify-end">
-                    <Button 
-                      onClick={() => {
+                    <Button
+                      onClick={async () => {
+                        // Generate conversation title
+                        const generatedTitle = await generateConversationTitle(messages);
+                        setConversationTitle(generatedTitle);
                         setShowTitleInput(true);
-                        // Generate a default title from the first message if available
-                        if (!conversationTitle && messages.length > 0) {
-                          setConversationTitle(
-                            messages[0].content.substring(0, 50) + (messages[0].content.length > 50 ? "..." : "")
-                          );
-                        }
                       }}
                       disabled={isSaving}
                       variant="outline"

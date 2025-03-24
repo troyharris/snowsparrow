@@ -19,4 +19,5 @@ export interface UploadRequest {
     updated_at: string
     preview: string | null
     tool?: string
+    tool_href?: string 
 }

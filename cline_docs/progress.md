@@ -129,6 +129,14 @@
   - [ ] Save chat history functionality
   - [ ] User preferences
 
+## Completed This Iteration
+
+- Modified the `ChatInterface.tsx` file to send the conversation to AI and ask it to create a summary title instead of using the user's input directly.
+  - [x] Added a function called `generateConversationTitle` to call the AI model to generate a summary title.
+  - [x] Called the `generateConversationTitle` function inside the `onClick` handler of the "Save" button, before saving the conversation to the database.
+  - [x] Updated the `title` property in the request body of the `fetch` call to use the generated title.
+  - [x] Updated the `onClick` handler of the "Save Conversation" button to update the `conversationTitle` state with the generated title before showing the title input.
+
 ## Planned Features
 
 - Saved items interface enhancements

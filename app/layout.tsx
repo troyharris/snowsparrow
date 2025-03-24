@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+//import { Manrope } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/shared/Nav";
 
+/*
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
+});
+*/
+const montserrat = Montserrat({
+  weight: "variable",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -21,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${manrope.variable} font-sans antialiased min-h-screen text-foreground bg-background`}
+        className={`${montserrat.className} font-sans antialiased min-h-screen text-foreground bg-background`}
       >
         <Nav />
         <main>{children}</main>

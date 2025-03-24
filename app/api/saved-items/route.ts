@@ -32,7 +32,7 @@ export async function GET(request: Request) {
     if (type === 'all' || type === 'conversation') {
       const { data: conversations, error: conversationsError } = await supabase
         .from('conversations')
-        .select('id, title, created_at, updated_at, tool_name')
+        .select('*, tool:tools(name, href)')
         .eq('user_id', userId)
         .ilike('title', `%${search}%`)
         .order('updated_at', { ascending: false })
@@ -48,7 +48,8 @@ export async function GET(request: Request) {
             created_at: conv.created_at ?? "",
             updated_at: conv.updated_at ?? "",
             preview: null, // Could add first message preview later
-            tool: conv.tool_name // Add tool to the saved item
+            tool: conv.tool?.name ?? undefined,
+            tool_href: conv.tool?.href ?? undefined
           }))
         )
       }
