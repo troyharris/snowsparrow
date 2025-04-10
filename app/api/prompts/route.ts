@@ -1,8 +1,15 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { invalidatePromptsCache } from "@/lib/ai/config/prompts";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
 export async function GET(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Prompts API: Creating Supabase client with service role");
     const supabase = await createClient(true); // Use service role
@@ -65,6 +72,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log(
       "Prompts API: Creating Supabase client with service role for POST"
@@ -115,6 +128,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log(
       "Prompts API: Creating Supabase client with service role for PUT"
@@ -174,6 +193,12 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log(
       "Prompts API: Creating Supabase client with service role for DELETE"
@@ -194,26 +219,69 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const { error } = await supabase.from("prompts").delete().eq("id", id);
-
-    if (error) {
-      console.error("Prompts API: Error deleting prompt:", error);
+    try {
+      // Use a direct SQL query to update all conversations that reference this prompt
+      console.log("Prompts API: Updating conversations with direct SQL");
+      const { error: sqlError } = await supabase.from('conversations')
+        .update({ prompt_id: null })
+        .eq('prompt_id', id);
+      
+      if (sqlError) {
+        console.error("Prompts API: Error updating conversations with SQL:", sqlError);
+        console.error(
+          "Prompts API: SQL Error details:",
+          JSON.stringify(sqlError, null, 2)
+        );
+        return NextResponse.json(
+          { error: `Failed to update conversations: ${sqlError.message}` },
+          { status: 500 }
+        );
+      }
+      
+      console.log("Prompts API: Conversations updated, now attempting to delete prompt");
+      
+      // Now try to delete the prompt
+      console.log("Prompts API: Deleting prompt");
+      const { error } = await supabase.from("prompts").delete().eq("id", id);
+      
+      if (error) {
+        console.error("Prompts API: Error deleting prompt:", error);
+        console.error(
+          "Prompts API: Error details:",
+          JSON.stringify(error, null, 2)
+        );
+        
+        // If we still get a constraint error, try to provide more specific information
+        if (error.code === "23503") { // Foreign key violation
+          return NextResponse.json(
+            { error: "This prompt is still referenced by other records in the database. Please remove those references first." },
+            { status: 409 }
+          );
+        }
+        
+        return NextResponse.json(
+          { error: `Failed to delete prompt: ${error.message}` },
+          { status: 500 }
+        );
+      }
+      
+      console.log("Prompts API: Prompt deleted successfully");
+      
+      // Invalidate cache
+      invalidatePromptsCache();
+      
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error("Prompts API: Error in DELETE:", error);
       console.error(
         "Prompts API: Error details:",
         JSON.stringify(error, null, 2)
       );
       return NextResponse.json(
-        { error: "Failed to delete prompt" },
+        { error: "Internal server error" },
         { status: 500 }
       );
     }
-
-    console.log("Prompts API: Prompt deleted successfully");
-
-    // Invalidate cache
-    invalidatePromptsCache();
-
-    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Prompts API: Error in DELETE:", error);
     console.error(

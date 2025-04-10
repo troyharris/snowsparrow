@@ -3,25 +3,40 @@ import { updateSession, isAuthenticated } from "./utils/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
   console.log('Middleware processing:', request.nextUrl.pathname);
-  
-  // update user's auth session
-  const res = await updateSession(request);
 
-  // Allow API routes and auth callback to bypass authentication
-  if (request.nextUrl.pathname.startsWith("/api/") || request.nextUrl.pathname.startsWith("/auth/callback")) {
-    console.log('Bypassing auth check for:', request.nextUrl.pathname);
-    return res;
+  // Paths that should be accessible without authentication
+  const publicPaths = [
+    "/login",
+    "/api/nonce",
+    "/auth/callback",
+    "/auth/confirm",
+    "/auth/signout"
+  ];
+
+  // Check if the current path is in the public paths list
+  const isPublicPath = publicPaths.some(path =>
+    request.nextUrl.pathname === path
+  );
+
+  // If it's a public path, let it through without session updates or auth checks
+  if (isPublicPath) {
+    console.log('Allowing public path:', request.nextUrl.pathname);
+    return NextResponse.next(); // Let the request proceed to the API route or page
   }
 
-  const authenticated = await isAuthenticated(request);
+  // For non-public paths, update the session and check authentication
+  const res = await updateSession(request); // updateSession might return a response (e.g., redirect)
+  const authenticated = await isAuthenticated(request); // Check auth status *after* potential session update
   console.log('Auth check result:', authenticated, 'for path:', request.nextUrl.pathname);
 
-  if (!authenticated && request.nextUrl.pathname !== "/login") {
+  if (!authenticated) {
     console.log('Redirecting to login from:', request.nextUrl.pathname);
     const redirectUrl = new URL(`/login`, request.url);
-    return NextResponse.redirect(redirectUrl);
+    return NextResponse.redirect(redirectUrl); // Explicitly redirect
   }
 
+  // If authenticated, return the response from updateSession (which might contain updated cookies)
+  // If updateSession returned NextResponse.next(), this will just continue the chain.
   return res;
 }
 

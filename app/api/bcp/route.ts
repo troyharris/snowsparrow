@@ -1,9 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { openRouterClient } from "@/lib/ai/clients/openrouter";
 import { getModelForTask } from "@/lib/ai/config/models";
 import { getPromptForTask } from "@/lib/ai/config/prompts";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { message, history, toolId } = await request.json();
     console.log("BCP API received message:", message);

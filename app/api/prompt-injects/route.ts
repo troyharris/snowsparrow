@@ -1,8 +1,15 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { invalidateInjectsCache } from "@/lib/ai/config/prompts";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
 export async function GET(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Prompt Injects API: Creating Supabase client with service role");
     const supabase = await createClient(true); // Use service role
@@ -83,6 +90,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Prompt Injects API: Creating Supabase client with service role for POST");
     const supabase = await createClient(true); // Use service role
@@ -125,6 +138,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Prompt Injects API: Creating Supabase client with service role for PUT");
     const supabase = await createClient(true); // Use service role
@@ -176,6 +195,12 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Prompt Injects API: Creating Supabase client with service role for DELETE");
     const supabase = await createClient(true); // Use service role

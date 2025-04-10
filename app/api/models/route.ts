@@ -1,8 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
 // GET /api/models - Get all models
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Models API: Creating Supabase client");
     const supabase = await createClient();
@@ -45,7 +52,13 @@ export async function GET() {
 }
 
 // POST /api/models - Create a new model
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const model = await request.json();
 
@@ -95,7 +108,13 @@ export async function POST(request: Request) {
 }
 
 // PATCH /api/models - Update a model
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const model = await request.json();
 
@@ -148,7 +167,13 @@ export async function PATCH(request: Request) {
 }
 
 // DELETE /api/models - Delete a model
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");

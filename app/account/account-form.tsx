@@ -2,8 +2,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { type User } from "@supabase/supabase-js";
+import Script from 'next/script';
 
-// ...
+// Global types for window.google are now defined in lib/types/google.types.ts
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -45,6 +46,16 @@ export default function AccountForm({ user }: { user: User | null }) {
   useEffect(() => {
     getProfile();
   }, [user, getProfile]);
+
+  // Function to handle sign out click
+  const handleSignOut = () => {
+    // Disable Google One Tap auto sign-in to prevent issues after logout
+    if (window.google?.accounts?.id) {
+      console.log('Disabling Google One Tap auto select.');
+      window.google.accounts.id.disableAutoSelect();
+    }
+    // Form submission will proceed naturally after this handler
+  };
 
   async function updateProfile({
     username,
@@ -93,11 +104,15 @@ export default function AccountForm({ user }: { user: User | null }) {
             <button
               className="bg-accent hover:bg-border text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 focus:ring-2 focus:ring-ring"
               type="submit"
+              onClick={handleSignOut} // Correctly placed onClick handler
             >
               Sign out
             </button>
           </form>
         </div>
+
+        {/* Load Google Sign-In client library */}
+        <Script src="https://accounts.google.com/gsi/client" strategy="lazyOnload" />
 
         <div className="space-y-6">
           <div className="space-y-1">

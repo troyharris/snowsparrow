@@ -1,7 +1,14 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
 export async function GET(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Check Admin API: Processing GET request");
     const url = new URL(request.url);

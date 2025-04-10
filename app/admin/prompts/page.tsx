@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { Button } from "@/components/shared/Button";
 import { Card, CardContent } from "@/components/shared/Card";
+import { DeletePromptButton } from "@/components/shared/DeletePromptButton";
 
 export default async function PromptsAdminPage() {
   // Create a service role client for database operations
@@ -72,6 +73,7 @@ export default async function PromptsAdminPage() {
                       Edit
                     </Button>
                   </Link>
+                  <DeletePromptButton id={prompt.id} />
                 </div>
               </CardContent>
             </Card>

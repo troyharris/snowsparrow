@@ -1,8 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { DatabaseConversation, StorageFile, SavedItem } from "@/lib/types";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type') || 'all'
@@ -104,7 +111,13 @@ export async function GET(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
