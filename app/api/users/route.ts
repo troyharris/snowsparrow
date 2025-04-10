@@ -1,7 +1,14 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Users API: Creating Supabase client with service role");
     const supabase = await createClient(true); // Use service role for admin operations
@@ -43,6 +50,12 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Users API: Processing PATCH request");
     const body = await request.json();
@@ -94,6 +107,12 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     console.log("Users API: Processing DELETE request");
     const url = new URL(request.url);

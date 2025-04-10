@@ -1,7 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import crypto from "crypto";
 import { UploadRequest } from "@/lib/types";
+import { isAuthenticated } from "@/utils/supabase/middleware"; // Import isAuthenticated
 
 // 5MB in bytes
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -31,7 +32,13 @@ function isValidBase64Image(base64String: string): boolean {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Add authentication check
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const supabase = await createClient();
 

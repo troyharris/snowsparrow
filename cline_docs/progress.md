@@ -13,6 +13,7 @@
   - Added traditional Google sign-in as fallback
   - Enhanced security with nonce-based validation
   - Added FedCM support for Chrome's third-party cookie phase-out
+  - Moved nonce generation to the server-side
 - Core application pages created:
   - Landing page (/)
   - Login page (/login)
@@ -100,6 +101,8 @@
   - [x] Updated row-level security policies for admin access
   - [ ] User profile management enhancements
 
+- Implemented delete functionality for prompts in the admin prompts page, ensuring only admins can delete prompts. Moved the delete logic to a client component to fix the "Event handlers cannot be passed to Client Component props" error. Modified the error message to be a generic message.
+
 - Mermaid flowchart creation tool
 
   - [x] User input interface
@@ -131,11 +134,12 @@
 
 ## Completed This Iteration
 
-- Modified the `ChatInterface.tsx` file to send the conversation to AI and ask it to create a summary title instead of using the user's input directly.
-  - [x] Added a function called `generateConversationTitle` to call the AI model to generate a summary title.
-  - [x] Called the `generateConversationTitle` function inside the `onClick` handler of the "Save" button, before saving the conversation to the database.
-  - [x] Updated the `title` property in the request body of the `fetch` call to use the generated title.
-  - [x] Updated the `onClick` handler of the "Save Conversation" button to update the `conversationTitle` state with the generated title before showing the title input.
+- Implemented authentication checks in API routes and auth callback to address security audit findings.
+  - [x] Modified `middleware.ts` to remove the blanket bypass for `/api/` and `/auth/callback`.
+  - [x] Implemented authentication checks in all API routes using the `isAuthenticated` function.
+  - [x] Added validation for the `next` parameter in `app/auth/callback/route.ts` to prevent open redirect vulnerabilities.
+  - [x] Created a specific whitelist of public paths in middleware that don't require authentication.
+  - [x] Fixed authentication flow to ensure auth-related endpoints remain accessible.
 
 ## Planned Features
 

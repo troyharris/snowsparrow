@@ -110,6 +110,9 @@ flowchart TD
 - Protected routes require valid session
 - Auth state managed through middleware
 - Middleware checks for authentication and redirects to /login if not authenticated
+- Specific public paths are whitelisted in middleware to allow authentication flow
+- API routes require authentication checks except for auth-related endpoints
+- Auth callback validates the 'next' parameter to prevent open redirects
 - Admin routes check for admin privileges through profiles table
 
 #### Google One Tap Implementation
@@ -125,7 +128,7 @@ flowchart TD
     G --> H[Redirect to Homepage]
 
     subgraph Security
-        N1[Nonce Generation]
+        N1[Server-Side Nonce Generation]
         N2[Token Validation]
         N3[CSRF Protection]
         N1 --> N2 --> N3

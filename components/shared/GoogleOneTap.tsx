@@ -4,52 +4,21 @@ import Script from 'next/script'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import type { CredentialResponse } from '@/lib/types/google.types' // Import the type
 
-// Add TypeScript definition for Google One Tap
-interface CredentialResponse {
-  credential: string;
-}
-
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: {
-            client_id: string;
-            callback: (response: CredentialResponse) => void;
-            nonce: string;
-            use_fedcm_for_prompt: boolean;
-          }) => void;
-          prompt: () => void;
-        };
-      };
-    };
-  }
-}
+// Global types for window.google are now defined in lib/types/google.types.ts
 
 const GoogleOneTapComponent = () => {
   const supabase = createClient()
   const router = useRouter()
 
-  // Generate nonce for security
-  const generateNonce = async (): Promise<string[]> => {
-    const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
-    const encoder = new TextEncoder()
-    const encodedNonce = encoder.encode(nonce)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', encodedNonce)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    const hashedNonce = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-
-    return [nonce, hashedNonce]
-  }
-
   useEffect(() => {
-    const initializeGoogleOneTap = () => {
+    const initializeGoogleOneTap = async () => {
       console.log('Initializing Google One Tap')
       window.addEventListener('load', async () => {
-        const [nonce, hashedNonce] = await generateNonce()
-        
+        const response = await fetch('/api/nonce')
+        const { nonce, hashedNonce } = await response.json()
+
         // Check if there's already an existing session before initializing the one-tap UI
         const { data: sessionData, error } = await supabase.auth.getSession()
         if (error) {
@@ -64,15 +33,22 @@ const GoogleOneTapComponent = () => {
         window.google?.accounts.id.initialize({
           client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
           callback: async (response: CredentialResponse) => {
+            // Ensure the credential exists before proceeding
+            if (!response.credential) {
+              console.error('Google One Tap callback received no credential.');
+              // Optionally display an error message to the user here
+              return;
+            }
+
             try {
-              // Send ID token to Supabase
+              // Send ID token to Supabase (now we know response.credential is a string)
               const { error } = await supabase.auth.signInWithIdToken({
                 provider: 'google',
                 token: response.credential,
                 nonce,
-              })
+              });
 
-              if (error) throw error
+              if (error) throw error;
               console.log('Successfully logged in with Google One Tap')
 
               // Redirect to protected page

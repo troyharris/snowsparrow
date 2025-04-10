@@ -58,19 +58,54 @@ export async function getModelByApiString(
 export async function getModelForTask(toolId: string): Promise<AIModel> {
   console.log(`getModelForTask: Getting model for tool ID: ${toolId}`);
 
-  // Get all models
-  const allModels = await getAllModels();
-  console.log(`getModelForTask: Fetched ${allModels.length} models`);
+  try {
+    // First check the tool_models table for a model mapping
+    const supabase = await createClient();
+    console.log(`Tool ID is ${toolId}`)
+    const { data: toolModelData, error: toolModelError } = await supabase
+      .from("tool_models")
+      .select("model_id")
+      .eq("tool_id", toolId)
+      .limit(1);
+    console.log(`Found ${toolModelData?.length} tool models.`)
+    if (toolModelError) {
+      console.error("Error fetching from tool_models:", toolModelError);
+    } else if (toolModelData && toolModelData.length > 0) {
+      // Found a tool-model mapping
+      const modelId = toolModelData[0].model_id;
+      console.log(`getModelForTask: Found model ID ${modelId} for tool ${toolId} in tool_models table`);
+      
+      // Get the model details
+      const { data: modelData, error: modelError } = await supabase
+        .from("models")
+        .select("*")
+        .eq("id", modelId)
+        .single();
+        
+      if (modelError) {
+        console.error("Error fetching mapped model:", modelError);
+      } else if (modelData) {
+        console.log(`getModelForTask: Using mapped model:`, modelData);
+        return modelData;
+      }
+    }
 
-  // Find the first model that supports this tool
-  // For now, we'll use the first available model since we haven't implemented tool-specific model preferences yet
-  // In the future, we could add a tool_models table to specify which models are preferred for each tool
-  if (allModels.length > 0) {
-    console.log(`getModelForTask: Using model:`, allModels[0]);
-    return allModels[0];
+    // Fall back to existing logic if no mapping found or if there was an error
+    // Get all models
+    const allModels = await getAllModels();
+    console.log(`getModelForTask: Fetched ${allModels.length} models`);
+
+    // Use the first available model as fallback
+    if (allModels.length > 0) {
+      console.log(`getModelForTask: Using fallback model:`, allModels[0]);
+      return allModels[0];
+    }
+
+    // If no models available, throw error
+    console.error(`getModelForTask: No AI models available`);
+    throw new Error("No AI models available");
+  } catch (error) {
+    console.error(`getModelForTask: Error:`, error);
+    throw error;
   }
-
-  // If no models available, throw error
-  console.error(`getModelForTask: No AI models available`);
-  throw new Error("No AI models available");
 }

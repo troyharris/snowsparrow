@@ -13,7 +13,12 @@ function LoginContent() {
 
   useEffect(() => {
     if (error) {
-      console.error('Login error:', decodeURIComponent(error))
+      try {
+        console.error('Login error:', decodeURIComponent(error))
+      } catch (e) { // Prefix unused variable with underscore
+        console.error("Error: ", e)
+        console.error('Login error (malformed URI component):', error)
+      }
     }
   }, [error])
 
@@ -48,7 +53,14 @@ function LoginContent() {
       <div className="bg-background border border-border rounded-md p-6 shadow-sm w-full max-w-md">
         {error && (
           <div className="mb-4 p-4 text-sm text-red-800 bg-red-50 rounded-md">
-            {decodeURIComponent(error)}
+            {(() => {
+              try {
+                return decodeURIComponent(error);
+              } catch (e) { // Prefix unused variable with underscore
+                console.error("Error: ", e)
+                return error;
+              }
+            })()}
           </div>
         )}
         <div className="text-center mb-8">
