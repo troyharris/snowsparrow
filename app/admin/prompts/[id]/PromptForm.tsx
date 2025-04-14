@@ -436,7 +436,7 @@ export default function PromptForm({ prompt }: { prompt: Prompt | null }) {
         />
         <p className="text-xs text-gray-500 mt-1">
           The prompt content. Use <code>{"{{INJECT:name}}"}</code> to include static content from a prompt inject.
-          You can also use dynamic placeholders: <code>{"{{fullName}}"}</code> for the user's full name and <code>{"{{jobTitle}}"}</code> for their job title.
+          You can also use dynamic placeholders: <code>{"{{fullName}}"}</code> for the user&apos;s full name and <code>{"{{jobTitle}}"}</code> for their job title.
         </p>
       </div>
 

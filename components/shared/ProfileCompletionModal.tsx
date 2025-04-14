@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/shared/Button"; // Assuming Button component exists
 
@@ -68,7 +68,7 @@ export default function ProfileCompletionModal({
       alert("Profile updated successfully!");
       setIsOpen(false); // Close modal on success
     } catch (error) {
-      alert("Error updating profile. Please try again.");
+      alert(`Error updating profile. Please try again. Error: ${error}`);
     } finally {
       setLoading(false);
     }

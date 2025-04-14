@@ -5,17 +5,19 @@ import { ChatInterface } from "@/components/shared";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 
 // TODO: Replace with the actual toolId once created in the database
-const TOOL_ID_PLACEHOLDER = "YOUR_MACBOOK_BASICS_TOOL_ID_HERE"; 
+const TOOL_ID_PLACEHOLDER = "96886303-be58-4efd-a002-b2aea39ff6f5"; 
 
 function MacBasicsContent() {
   // In a real scenario, you might fetch tool details if needed,
   // but for static config, we pass the ID directly.
   
   // Basic check to ensure placeholder is replaced
+  /*
   if (TOOL_ID_PLACEHOLDER === "YOUR_MACBOOK_BASICS_TOOL_ID_HERE") {
      console.warn("Macbook Basics page: TOOL_ID_PLACEHOLDER needs to be replaced with the actual tool ID.");
      // Optionally render an error or loading state until ID is set
   }
+     */
 
   return (
     <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8">
