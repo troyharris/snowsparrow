@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/shared/Card";
 import { createClient } from "@/utils/supabase/server";
+import ProfileCompletionModal from "@/components/shared/ProfileCompletionModal"; // Import the new modal
 
-async function getTools() {
-  const supabase = await createClient();
+import { SupabaseClient } from "@supabase/supabase-js"; // Import SupabaseClient type
+
+async function getTools(supabase: SupabaseClient) { // Accept client as argument
   const { data: tools } = await supabase
     .from("tools")
     .select("*")
@@ -12,8 +14,39 @@ async function getTools() {
   return tools || [];
 }
 
+async function getUserProfile(supabase: SupabaseClient) { // Use SupabaseClient type
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return null;
+  }
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("full_name, job_title")
+    .eq("id", user.id)
+    .single();
+
+  // PGRST116 means no row found, which is okay if profile hasn't been created yet
+  if (error && error.code !== 'PGRST116') {
+    console.error("Error fetching profile:", error.message);
+    // Decide how to handle errors, maybe return null or throw
+    return null;
+  }
+
+  // Return null if no profile found, or the profile data
+  return profile || null;
+}
+
+
 export default async function Home() {
-  const tools = await getTools();
+  const supabase = await createClient(); // Await here
+  // Fetch tools and profile concurrently
+  const [tools, profile] = await Promise.all([
+    getTools(supabase), // Pass awaited client
+    getUserProfile(supabase), // Pass awaited client
+  ]);
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
       {/* Add Google Material Icons */}
@@ -21,7 +54,15 @@ export default async function Home() {
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet"
       />
-      
+
+      {/* Conditionally render the modal */}
+      {profile !== null && ( // Only render if we successfully checked (even if profile is empty)
+        <ProfileCompletionModal
+          initialFullName={profile?.full_name ?? null}
+          initialJobTitle={profile?.job_title ?? null}
+        />
+      )}
+
       {/* Tools Grid Section */}
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-3xl font-bold tracking-tight text-foreground mb-8">
