@@ -28,6 +28,10 @@
   - API routes setup
   - Utility functions
   - TypeScript configuration
+- Profile completion modal on root page:
+  - Fetches user profile server-side
+  - Displays modal if `fullName` or `jobTitle` is missing
+  - Allows user input and saves via client-side Supabase update
 
 ## In Progress
 
@@ -99,7 +103,7 @@
   - [x] Implemented users administration page
   - [x] Added role-based access control
   - [x] Updated row-level security policies for admin access
-  - [ ] User profile management enhancements
+  - [x] User profile management enhancements (Initial completion modal added)
 
 - Implemented delete functionality for prompts in the admin prompts page, ensuring only admins can delete prompts. Moved the delete logic to a client component to fix the "Event handlers cannot be passed to Client Component props" error. Modified the error message to be a generic message.
 
@@ -140,6 +144,11 @@
   - [x] Added validation for the `next` parameter in `app/auth/callback/route.ts` to prevent open redirect vulnerabilities.
   - [x] Created a specific whitelist of public paths in middleware that don't require authentication.
   - [x] Fixed authentication flow to ensure auth-related endpoints remain accessible.
+- Implemented profile completion modal on root page (`/`).
+  - [x] Fetched user profile data (`fullName`, `jobTitle`) in `app/page.tsx`.
+  - [x] Created `components/shared/ProfileCompletionModal.tsx`.
+  - [x] Modal triggers correctly based on missing profile data.
+  - [x] Implemented save functionality using client-side Supabase update.
 
 ## Planned Features
 
@@ -205,6 +214,7 @@
   - Authentication flow
   - Handbook chat functionality
   - Google One Tap integration
+  - Profile completion modal functionality
 - End-to-end testing plan required
 
 ## Deployment Status

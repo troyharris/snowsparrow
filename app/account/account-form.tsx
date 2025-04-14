@@ -10,8 +10,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [fullname, setFullname] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [website, setWebsite] = useState<string | null>(null);
+  const [jobTitle, setJobTitle] = useState<string | null>(null); // Added jobTitle state, removed username/website
   const [avatar_url, setAvatarUrl] = useState<string | null>(null);
 
   const getProfile = useCallback(async () => {
@@ -20,7 +19,7 @@ export default function AccountForm({ user }: { user: User | null }) {
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`full_name, username, website, avatar_url`)
+        .select(`full_name, job_title, avatar_url`) // Fetch job_title instead of username, website
         .eq("id", user?.id)
         .single();
 
@@ -31,8 +30,7 @@ export default function AccountForm({ user }: { user: User | null }) {
 
       if (data) {
         setFullname(data.full_name);
-        setUsername(data.username);
-        setWebsite(data.website);
+        setJobTitle(data.job_title); // Set jobTitle state
         setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
@@ -58,13 +56,12 @@ export default function AccountForm({ user }: { user: User | null }) {
   };
 
   async function updateProfile({
-    username,
-    website,
+    fullname, // Removed username, website
+    jobTitle, // Added jobTitle
     avatar_url,
   }: {
-    username: string | null;
     fullname: string | null;
-    website: string | null;
+    jobTitle: string | null; // Added jobTitle type
     avatar_url: string | null;
   }) {
     try {
@@ -73,8 +70,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       const { error } = await supabase.from("profiles").upsert({
         id: user?.id as string,
         full_name: fullname,
-        username,
-        website,
+        job_title: jobTitle, // Update job_title instead of username, website
         avatar_url,
         updated_at: new Date().toISOString(),
       });
@@ -136,7 +132,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               className="block text-sm font-medium text-foreground"
               htmlFor="fullName"
             >
-              Full name
+              First name
             </label>
             <input
               id="fullName"
@@ -148,37 +144,21 @@ export default function AccountForm({ user }: { user: User | null }) {
             />
           </div>
 
+          {/* Replaced Username and Website with Job Title */}
           <div className="space-y-1">
             <label
               className="block text-sm font-medium text-foreground"
-              htmlFor="username"
+              htmlFor="jobTitle"
             >
-              Username
+              Job Title
             </label>
             <input
-              id="username"
+              id="jobTitle"
               type="text"
-              value={username || ""}
-              onChange={(e) => setUsername(e.target.value)}
+              value={jobTitle || ""}
+              onChange={(e) => setJobTitle(e.target.value)}
               className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
-              placeholder="@username"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label
-              className="block text-sm font-medium text-foreground"
-              htmlFor="website"
-            >
-              Website
-            </label>
-            <input
-              id="website"
-              type="url"
-              value={website || ""}
-              onChange={(e) => setWebsite(e.target.value)}
-              className="w-full bg-input border border-border rounded-md text-foreground text-sm leading-5 px-3 py-2 transition-all duration-150 ease-in-out focus:border-accent focus:ring-2 focus:ring-ring"
-              placeholder="https://your-website.com"
+              placeholder="Your job title"
             />
           </div>
 
@@ -186,7 +166,7 @@ export default function AccountForm({ user }: { user: User | null }) {
             <button
               className="w-full bg-accent hover:bg-accent-hover text-accent-foreground font-medium py-2 px-4 rounded-md transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-ring"
               onClick={() =>
-                updateProfile({ fullname, username, website, avatar_url })
+                updateProfile({ fullname, jobTitle, avatar_url }) // Pass jobTitle instead of username, website
               }
               disabled={loading}
             >
