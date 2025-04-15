@@ -293,7 +293,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     key={index}
                     className={`p-4 ${
                       message.role === "user"
-                        ? "bg-slate-100 rounded-md"
+                        ? "dark:bg-slate-700 bg-slate-100 rounded-md"
                         : ""
                     } `}
                   >

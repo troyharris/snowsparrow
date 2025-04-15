@@ -32,7 +32,7 @@ export default function NavDropdown() {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors inline-flex items-center gap-1">
+      <Menu.Button className="text-muted hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors inline-flex items-center gap-1">
         AI Tools
         <svg
           className="w-4 h-4"
@@ -57,7 +57,7 @@ export default function NavDropdown() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-background shadow-lg ring-1 ring-border focus:outline-none">
           <div className="py-1">
             {[...tools, {
               id: 'saved-items',
@@ -74,12 +74,12 @@ export default function NavDropdown() {
                     href={tool.href}
                     className={`${
                       active || pathname === tool.href
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-700"
+                        ? "bg-muted/20 text-foreground"
+                        : "text-muted-foreground"
                     } group flex items-center px-4 py-2 text-sm gap-3`}
                   >
                     <span 
-                      className="material-icons text-xl text-gray-500"
+                      className="material-icons text-xl text-muted"
                       aria-hidden="true"
                     >
                       {tool.icon}

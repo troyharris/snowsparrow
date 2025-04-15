@@ -39,7 +39,7 @@ export default function AdminSidebar() {
 
   return (
     <div
-      className={`bg-white border-r border-gray-200 h-full transition-all duration-300 ${
+      className={`bg-background border-r border-border h-full transition-all duration-300 ${
         collapsed ? "w-16" : "w-64"
       }`}
     >
@@ -52,7 +52,7 @@ export default function AdminSidebar() {
         {!collapsed && <h2 className="font-semibold text-lg">Admin Panel</h2>}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1 rounded hover:bg-gray-100"
+          className="p-1 rounded hover:bg-muted/20"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <svg
@@ -82,8 +82,8 @@ export default function AdminSidebar() {
                 href={item.href}
                 className={`flex items-center p-2 rounded-md transition-colors ${
                   pathname === item.href
-                    ? "bg-blue-50 text-blue-700"
-                    : "hover:bg-gray-100"
+                    ? "bg-accent/20 text-accent"
+                    : "hover:bg-muted/20"
                 }`}
               >
                 <span 
