@@ -60,14 +60,27 @@ export async function getModelForTask(toolId: string): Promise<AIModel> {
 
   try {
     // First check the tool_models table for a model mapping
-    const supabase = await createClient();
-    console.log(`Tool ID is ${toolId}`)
+    // Use service role client to bypass RLS
+    const supabase = await createClient(true);
+    console.log(`Tool ID is ${toolId}`);
+    
+    // DEBUG: Log the actual toolId value
+    console.log(`Tool ID value: "${toolId}"`);
+    
     const { data: toolModelData, error: toolModelError } = await supabase
       .from("tool_models")
       .select("model_id")
       .eq("tool_id", toolId)
       .limit(1);
-    console.log(`Found ${toolModelData?.length} tool models.`)
+      
+    // DEBUG: Add detailed logging
+    console.log(`Tool models query results:`, {
+      data: toolModelData,
+      error: toolModelError,
+      count: toolModelData?.length
+    });
+    
+    console.log(`Found ${toolModelData?.length} tool models.`);
     if (toolModelError) {
       console.error("Error fetching from tool_models:", toolModelError);
     } else if (toolModelData && toolModelData.length > 0) {
